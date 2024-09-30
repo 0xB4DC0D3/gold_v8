@@ -1,0 +1,7 @@
+[package]
+name = "core"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+v8 = { version = "0.1.0", path = "../v8" }
