@@ -121,8 +121,6 @@ fn fetch_and_build_v8() {
         "treat_warnings_as_errors=false",
     ];
 
-    // panic!("{}", format!("--args='{}'", gn_args.join(" ")));
-
     assert!(Command::new("python")
         .arg(depot_tools_dir.join("gn").with_extension("py"))
         .arg("gen")
