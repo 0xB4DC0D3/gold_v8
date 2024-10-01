@@ -1,6 +1,6 @@
 use crate::{
     data::traits::Data, isolate::Isolate, local::Local, primitive::traits::Primitive,
-    scope::HandleScope,
+    scope::HandleScope, value::traits::Value,
 };
 
 extern "C" {
@@ -35,4 +35,5 @@ impl Into<bool> for &Boolean {
 }
 
 impl Data for Boolean {}
+impl Value for Boolean {}
 impl Primitive for Boolean {}

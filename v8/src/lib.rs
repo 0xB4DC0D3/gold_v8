@@ -13,7 +13,9 @@ pub mod data;
 pub mod isolate;
 pub mod local;
 pub mod microtask_queue;
+pub mod name;
 pub mod number;
+pub mod numeric;
 pub mod object;
 pub mod object_template;
 pub mod platform;
@@ -30,10 +32,4 @@ pub fn get_version() -> String {
         "{}.{}.{}",
         v8cxx__major_version, v8cxx__minor_version, v8cxx__patch_level
     )
-}
-
-#[repr(C)]
-pub enum NewStringType {
-    Normal,
-    Internalized,
 }

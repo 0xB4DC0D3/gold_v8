@@ -1,4 +1,7 @@
-use crate::{isolate::Isolate, local::Local, scope::HandleScope, string::String};
+use crate::{
+    data::traits::Data, isolate::Isolate, local::Local, name::traits::Name,
+    primitive::traits::Primitive, scope::HandleScope, string::String, value::traits::Value,
+};
 
 extern "C" {
     fn v8cxx__symbol_new(
@@ -97,10 +100,7 @@ impl Symbol {
         let mut local_symbol = Local::<Self>::empty();
 
         unsafe {
-            v8cxx__symbol_get_has_instance(
-                &mut local_symbol,
-                handle_scope.get_isolate().unwrap(),
-            );
+            v8cxx__symbol_get_has_instance(&mut local_symbol, handle_scope.get_isolate().unwrap());
         }
 
         local_symbol
@@ -125,10 +125,7 @@ impl Symbol {
         let mut local_symbol = Local::<Self>::empty();
 
         unsafe {
-            v8cxx__symbol_get_iterator(
-                &mut local_symbol,
-                handle_scope.get_isolate().unwrap(),
-            );
+            v8cxx__symbol_get_iterator(&mut local_symbol, handle_scope.get_isolate().unwrap());
         }
 
         local_symbol
@@ -139,10 +136,7 @@ impl Symbol {
         let mut local_symbol = Local::<Self>::empty();
 
         unsafe {
-            v8cxx__symbol_get_match(
-                &mut local_symbol,
-                handle_scope.get_isolate().unwrap(),
-            );
+            v8cxx__symbol_get_match(&mut local_symbol, handle_scope.get_isolate().unwrap());
         }
 
         local_symbol
@@ -153,10 +147,7 @@ impl Symbol {
         let mut local_symbol = Local::<Self>::empty();
 
         unsafe {
-            v8cxx__symbol_get_replace(
-                &mut local_symbol,
-                handle_scope.get_isolate().unwrap(),
-            );
+            v8cxx__symbol_get_replace(&mut local_symbol, handle_scope.get_isolate().unwrap());
         }
 
         local_symbol
@@ -167,10 +158,7 @@ impl Symbol {
         let mut local_symbol = Local::<Self>::empty();
 
         unsafe {
-            v8cxx__symbol_get_search(
-                &mut local_symbol,
-                handle_scope.get_isolate().unwrap(),
-            );
+            v8cxx__symbol_get_search(&mut local_symbol, handle_scope.get_isolate().unwrap());
         }
 
         local_symbol
@@ -181,10 +169,7 @@ impl Symbol {
         let mut local_symbol = Local::<Self>::empty();
 
         unsafe {
-            v8cxx__symbol_get_split(
-                &mut local_symbol,
-                handle_scope.get_isolate().unwrap(),
-            );
+            v8cxx__symbol_get_split(&mut local_symbol, handle_scope.get_isolate().unwrap());
         }
 
         local_symbol
@@ -195,10 +180,7 @@ impl Symbol {
         let mut local_symbol = Local::<Self>::empty();
 
         unsafe {
-            v8cxx__symbol_get_to_primitive(
-                &mut local_symbol,
-                handle_scope.get_isolate().unwrap(),
-            );
+            v8cxx__symbol_get_to_primitive(&mut local_symbol, handle_scope.get_isolate().unwrap());
         }
 
         local_symbol
@@ -209,10 +191,7 @@ impl Symbol {
         let mut local_symbol = Local::<Self>::empty();
 
         unsafe {
-            v8cxx__symbol_get_to_string_tag(
-                &mut local_symbol,
-                handle_scope.get_isolate().unwrap(),
-            );
+            v8cxx__symbol_get_to_string_tag(&mut local_symbol, handle_scope.get_isolate().unwrap());
         }
 
         local_symbol
@@ -223,12 +202,14 @@ impl Symbol {
         let mut local_symbol = Local::<Self>::empty();
 
         unsafe {
-            v8cxx__symbol_get_unscopables(
-                &mut local_symbol,
-                handle_scope.get_isolate().unwrap(),
-            );
+            v8cxx__symbol_get_unscopables(&mut local_symbol, handle_scope.get_isolate().unwrap());
         }
 
         local_symbol
     }
 }
+
+impl Data for Symbol {}
+impl Value for Symbol {}
+impl Primitive for Symbol {}
+impl Name for Symbol {}

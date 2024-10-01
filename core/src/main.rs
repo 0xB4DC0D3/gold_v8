@@ -1,4 +1,4 @@
-use v8::value::traits::Value;
+use v8::{object::traits::Object, value::traits::Value};
 
 fn main() {
     let platform = v8::platform::Platform::new(
@@ -23,8 +23,9 @@ fn main() {
         let source = v8::string::String::new_from_utf8(
             handle_scope,
             r#""hello, " + "world""#,
-            v8::NewStringType::Normal,
+            v8::string::NewStringType::Normal,
         );
+
         let mut script = v8::script::Script::compile(&context, &source);
 
         let result = script.run(&context);
@@ -33,6 +34,40 @@ fn main() {
             "result = {}",
             result.to_string(&context).as_str(handle_scope)
         );
+
+        let mut test = v8::object::Object::new(handle_scope);
+        test.set(
+            &context,
+            &v8::string::String::new_from_utf8(
+                handle_scope,
+                "test",
+                v8::string::NewStringType::Normal,
+            )
+            .cast(),
+            &v8::string::String::new_from_utf8(
+                handle_scope,
+                "test",
+                v8::string::NewStringType::Normal,
+            )
+            .cast(),
+            None,
+        );
+
+        println!(
+            "{{ test: {} }}",
+            test.get(
+                &context,
+                &v8::string::String::new_from_utf8(
+                    handle_scope,
+                    "test",
+                    v8::string::NewStringType::Normal
+                )
+                .cast(),
+                None
+            )
+            .cast::<v8::string::String>()
+            .as_str(handle_scope)
+        )
     }
 
     v8::v8::dispose();
