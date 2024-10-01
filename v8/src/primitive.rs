@@ -1,4 +1,6 @@
-use crate::{isolate::Isolate, local::Local, scope::HandleScope};
+use crate::{
+    data::traits::Data, isolate::Isolate, local::Local, scope::HandleScope, value::traits::Value,
+};
 
 extern "C" {
     fn v8cxx__primitive_undefined(local_buf: *mut Local<Primitive>, isolate: *mut Isolate);
@@ -30,8 +32,12 @@ impl Primitive {
     }
 }
 
-pub mod traits {
-    use crate::data::traits::Data;
+impl Data for Primitive {}
+impl Value for Primitive {}
+impl traits::Primitive for Primitive {}
 
-    pub trait Primitive: Data {}
+pub mod traits {
+    use crate::value::traits::Value;
+
+    pub trait Primitive: Value {}
 }

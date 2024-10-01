@@ -2,7 +2,7 @@ use core::str;
 
 use crate::{
     data::traits::Data, isolate::Isolate, local::Local, primitive::traits::Primitive,
-    scope::HandleScope, value::traits::Value, NewStringType,
+    scope::HandleScope, value::traits::Value,
 };
 
 extern "C" {
@@ -43,6 +43,13 @@ extern "C" {
         isolate: *mut Isolate,
     );
     fn v8cxx__string_view(this: *const String, isolate: *mut Isolate) -> *const u8;
+}
+
+#[derive(Clone, Copy)]
+#[repr(C)]
+pub enum NewStringType {
+    Normal,
+    Internalized,
 }
 
 #[repr(C)]

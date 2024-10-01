@@ -1,4 +1,4 @@
-use crate::{context::Context, local::Local, string::String, value::Value};
+use crate::{context::Context, data::traits::Data, local::Local, string::String, value::Value};
 
 extern "C" {
     fn v8cxx__script_compile(
@@ -38,3 +38,5 @@ impl Script {
         local_value
     }
 }
+
+impl Data for Script {}

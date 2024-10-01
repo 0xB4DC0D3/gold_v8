@@ -722,3 +722,122 @@ extern "C"
         new (local_buf) v8::Local<v8::Value>(script->Run(*context).ToLocalChecked());
     }
 }
+
+// v8::Name
+extern "C"
+{
+    int v8cxx__name_get_identity_hash(v8::Name *name)
+    {
+        return name->GetIdentityHash();
+    }
+}
+
+// v8::Object
+extern "C"
+{
+    void v8cxx__object_new(v8::Local<v8::Object> *local_buf, v8::Isolate *isolate)
+    {
+        new (local_buf) v8::Local<v8::Object>(v8::Object::New(isolate));
+    }
+    bool v8cxx__object_set(
+        v8::Object *object,
+        const v8::Local<v8::Context> *context,
+        const v8::Local<v8::Value> *key,
+        const v8::Local<v8::Value> *value,
+        const v8::Local<v8::Object> *receiver)
+    {
+        auto result = false;
+
+        if (receiver == nullptr)
+        {
+            object->Set(*context, *key, *value).FromMaybe(&result);
+        }
+        else
+        {
+            object->Set(*context, *key, *value, *receiver).FromMaybe(&result);
+        }
+
+        return result;
+    }
+
+    bool v8cxx__object_set_indexed(
+        v8::Object *object,
+        const v8::Local<v8::Context> *context,
+        uint32_t index,
+        const v8::Local<v8::Value> *value)
+    {
+        auto result = false;
+
+        object->Set(*context, index, *value).FromMaybe(&result);
+
+        return result;
+    }
+
+    bool v8cxx__object_create_data_property(
+        v8::Object *object,
+        const v8::Local<v8::Context> *context,
+        const v8::Local<v8::Name> *key,
+        const v8::Local<v8::Value> *value)
+    {
+        auto result = false;
+
+        object->CreateDataProperty(*context, *key, *value).FromMaybe(&result);
+
+        return result;
+    }
+
+    bool v8cxx__object_create_data_property_indexed(
+        v8::Object *object,
+        const v8::Local<v8::Context> *context,
+        uint32_t index,
+        const v8::Local<v8::Value> *value)
+    {
+        auto result = false;
+
+        object->CreateDataProperty(*context, index, *value).FromMaybe(&result);
+
+        return result;
+    }
+
+    bool v8cxx__object_define_own_property(
+        v8::Object *object,
+        const v8::Local<v8::Context> *context,
+        const v8::Local<v8::Name> *key,
+        const v8::Local<v8::Value> *value,
+        v8::PropertyAttribute attributes)
+    {
+        auto result = false;
+
+        object->DefineOwnProperty(*context, *key, *value, attributes).FromMaybe(&result);
+
+        return result;
+    }
+
+    // TODO: v8cxx__object_define_property
+
+    void v8cxx__object_get(
+        v8::Local<v8::Value> *local_buf,
+        v8::Object *object,
+        const v8::Local<v8::Context> *context,
+        const v8::Local<v8::Value> *key,
+        const v8::Local<v8::Object> *receiver)
+    {
+        if (receiver == nullptr)
+        {
+            new (local_buf) v8::Local<v8::Value>(object->Get(*context, *key).ToLocalChecked());
+        }
+        else
+        {
+            new (local_buf) v8::Local<v8::Value>(object->Get(*context, *key, *receiver).ToLocalChecked());
+        }
+    }
+
+    void v8cxx__object_get_indexed(
+        v8::Local<v8::Value> *local_buf,
+        v8::Object *object,
+        const v8::Local<v8::Context> *context,
+        uint32_t index)
+    {
+        new (local_buf) v8::Local<v8::Value>(object->Get(*context, index).ToLocalChecked());
+    }
+}
