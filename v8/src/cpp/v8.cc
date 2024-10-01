@@ -80,6 +80,11 @@ extern "C"
         return isolate->GetCurrent();
     }
 
+    void v8cxx__isolate_get_current_context(v8::Local<v8::Context> *local_buf, v8::Isolate *isolate)
+    {
+        new (local_buf) v8::Local<v8::Context>(isolate->GetCurrentContext());
+    }
+
     void v8cxx__isolate_enter(v8::Isolate *isolate)
     {
         isolate->Enter();

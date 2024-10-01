@@ -1,4 +1,4 @@
-use crate::{array_buffer::ArrayBufferAllocator, bindings};
+use crate::{array_buffer::ArrayBufferAllocator, bindings, context::Context, local::Local};
 
 extern "C" {
     fn v8cxx__isolate__createparams(
@@ -9,6 +9,7 @@ extern "C" {
     fn v8cxx__isolate_enter(this: *mut Isolate);
     fn v8cxx__isolate_exit(this: *mut Isolate);
     fn v8cxx__isolate_get_current(this: *mut Isolate) -> *mut Isolate;
+    fn v8cxx__isolate_get_current_context(local_buf: *mut Local<Context>, this: *mut Isolate);
 }
 
 #[repr(C)]
@@ -48,6 +49,15 @@ impl Isolate {
     #[inline(always)]
     pub fn get_current(&mut self) -> Option<&mut Self> {
         unsafe { v8cxx__isolate_get_current(self).as_mut() }
+    }
+
+    #[inline(always)]
+    pub fn get_current_context(&mut self) -> Local<Context> {
+        let mut local_context = Local::<Context>::empty();
+
+        unsafe { v8cxx__isolate_get_current_context(&mut local_context, self) };
+
+        local_context
     }
 }
 
