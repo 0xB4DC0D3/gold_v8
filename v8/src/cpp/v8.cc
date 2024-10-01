@@ -149,15 +149,10 @@ extern "C"
         context->Exit();
     }
 
-    v8::Isolate* v8cxx__context_get_isolate(v8::Context *context)
+    v8::Isolate *v8cxx__context_get_isolate(v8::Context *context)
     {
         return context->GetIsolate();
     }
-}
-
-// v8::Local
-extern "C"
-{
 }
 
 // v8::Data
@@ -628,6 +623,80 @@ extern "C"
     {
         auto local_string = string->ToString(isolate->GetCurrentContext()).ToLocalChecked();
         return *v8::String::Utf8Value(isolate, local_string);
+    }
+}
+
+// v8::Symbol
+extern "C"
+{
+    void v8cxx__symbol_new(v8::Local<v8::Symbol> *local_buf, v8::Isolate *isolate, const v8::Local<v8::String> *name)
+    {
+        new (local_buf) v8::Local<v8::Symbol>(v8::Symbol::New(isolate, *name));
+    }
+
+    void v8cxx__symbol_for(v8::Local<v8::Symbol> *local_buf, v8::Isolate *isolate, const v8::Local<v8::String> *description)
+    {
+        new (local_buf) v8::Local<v8::Symbol>(v8::Symbol::For(isolate, *description));
+    }
+
+    void v8cxx__symbol_for_api(v8::Local<v8::Symbol> *local_buf, v8::Isolate *isolate, const v8::Local<v8::String> *description)
+    {
+        new (local_buf) v8::Local<v8::Symbol>(v8::Symbol::For(isolate, *description));
+    }
+
+    void v8cxx__symbol_get_async_iterator(v8::Local<v8::Symbol> *local_buf, v8::Isolate *isolate)
+    {
+        new (local_buf) v8::Local<v8::Symbol>(v8::Symbol::GetAsyncIterator(isolate));
+    }
+
+    void v8cxx__symbol_get_has_instance(v8::Local<v8::Symbol> *local_buf, v8::Isolate *isolate)
+    {
+        new (local_buf) v8::Local<v8::Symbol>(v8::Symbol::GetHasInstance(isolate));
+    }
+
+    void v8cxx__symbol_get_is_concat_spreadable(v8::Local<v8::Symbol> *local_buf, v8::Isolate *isolate)
+    {
+        new (local_buf) v8::Local<v8::Symbol>(v8::Symbol::GetIsConcatSpreadable(isolate));
+    }
+
+    void v8cxx__symbol_get_iterator(v8::Local<v8::Symbol> *local_buf, v8::Isolate *isolate)
+    {
+        new (local_buf) v8::Local<v8::Symbol>(v8::Symbol::GetIterator(isolate));
+    }
+
+    void v8cxx__symbol_get_match(v8::Local<v8::Symbol> *local_buf, v8::Isolate *isolate)
+    {
+        new (local_buf) v8::Local<v8::Symbol>(v8::Symbol::GetMatch(isolate));
+    }
+
+    void v8cxx__symbol_get_replace(v8::Local<v8::Symbol> *local_buf, v8::Isolate *isolate)
+    {
+        new (local_buf) v8::Local<v8::Symbol>(v8::Symbol::GetReplace(isolate));
+    }
+
+    void v8cxx__symbol_get_search(v8::Local<v8::Symbol> *local_buf, v8::Isolate *isolate)
+    {
+        new (local_buf) v8::Local<v8::Symbol>(v8::Symbol::GetSearch(isolate));
+    }
+
+    void v8cxx__symbol_get_split(v8::Local<v8::Symbol> *local_buf, v8::Isolate *isolate)
+    {
+        new (local_buf) v8::Local<v8::Symbol>(v8::Symbol::GetSplit(isolate));
+    }
+
+    void v8cxx__symbol_get_to_primitive(v8::Local<v8::Symbol> *local_buf, v8::Isolate *isolate)
+    {
+        new (local_buf) v8::Local<v8::Symbol>(v8::Symbol::GetToPrimitive(isolate));
+    }
+
+    void v8cxx__symbol_get_to_string_tag(v8::Local<v8::Symbol> *local_buf, v8::Isolate *isolate)
+    {
+        new (local_buf) v8::Local<v8::Symbol>(v8::Symbol::GetToStringTag(isolate));
+    }
+
+    void v8cxx__symbol_get_unscopables(v8::Local<v8::Symbol> *local_buf, v8::Isolate *isolate)
+    {
+        new (local_buf) v8::Local<v8::Symbol>(v8::Symbol::GetUnscopables(isolate));
     }
 }
 

@@ -21,6 +21,7 @@ pub mod primitive;
 pub mod scope;
 pub mod script;
 pub mod string;
+pub mod symbol;
 pub mod v8;
 pub mod value;
 
