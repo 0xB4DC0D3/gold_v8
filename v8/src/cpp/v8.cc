@@ -148,6 +148,11 @@ extern "C"
     {
         context->Exit();
     }
+
+    v8::Isolate* v8cxx__context_get_isolate(v8::Context *context)
+    {
+        return context->GetIsolate();
+    }
 }
 
 // v8::Local

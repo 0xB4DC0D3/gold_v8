@@ -4,6 +4,7 @@ extern "C" {
     fn v8cxx__context_new(local_buf: *mut Local<Context>, isolate: *mut Isolate);
     fn v8cxx__context_enter(this: *mut Context);
     fn v8cxx__context_exit(this: *mut Context);
+    fn v8cxx__context_get_isolate(this: *mut Context) -> *mut Isolate;
 }
 
 #[repr(C)]
@@ -30,6 +31,11 @@ impl Context {
     #[inline(always)]
     fn exit(&mut self) {
         unsafe { v8cxx__context_exit(self) };
+    }
+
+    #[inline(always)]
+    pub fn get_isolate(&mut self) -> Option<&mut Isolate> {
+        unsafe { v8cxx__context_get_isolate(self).as_mut() }
     }
 }
 
