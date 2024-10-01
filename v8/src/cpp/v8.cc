@@ -75,6 +75,11 @@ extern "C"
         return v8::Isolate::New(create_params);
     }
 
+    v8::Isolate *v8cxx__isolate_get_current(v8::Isolate *isolate)
+    {
+        return isolate->GetCurrent();
+    }
+
     void v8cxx__isolate_enter(v8::Isolate *isolate)
     {
         isolate->Enter();
@@ -609,7 +614,7 @@ extern "C"
         new (local_buf) v8::Local<v8::String>(string.InternalizeString(isolate));
     }
 
-    const char* v8cxx__string_view(const v8::String* string, v8::Isolate* isolate)
+    const char *v8cxx__string_view(const v8::String *string, v8::Isolate *isolate)
     {
         auto local_string = string->ToString(isolate->GetCurrentContext()).ToLocalChecked();
         return *v8::String::Utf8Value(isolate, local_string);
