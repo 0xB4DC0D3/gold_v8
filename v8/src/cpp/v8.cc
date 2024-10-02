@@ -133,10 +133,20 @@ extern "C"
 // v8::Context
 extern "C"
 {
-    void v8cxx__context_new(v8::Local<v8::Context> *local_buf, v8::Isolate *isolate)
+    void v8cxx__context_new(
+        v8::Local<v8::Context> *local_buf,
+        v8::Isolate *isolate,
+        const v8::Local<v8::ObjectTemplate> *global_template,
+        const v8::Local<v8::Value> *global_object,
+        v8::MicrotaskQueue *microtask_queue)
     {
-        // TODO: new (local_buf) v8::Local<v8::Context(v8::Context::New(isolate, nullptr, global_template, global_object, v8::DeserializeInternalFieldsCallback(), microtask_queue));
-        new (local_buf) v8::Local<v8::Context>(v8::Context::New(isolate));
+        new (local_buf) v8::Local<v8::Context>(v8::Context::New(
+            isolate,
+            nullptr,
+            global_template == nullptr ? v8::MaybeLocal<v8::ObjectTemplate>() : *global_template,
+            global_object == nullptr ? v8::MaybeLocal<v8::Value>() : *global_object,
+            v8::DeserializeInternalFieldsCallback(),
+            microtask_queue));
     }
 
     void v8cxx__context_enter(v8::Context *context)
@@ -149,9 +159,29 @@ extern "C"
         context->Exit();
     }
 
+    void v8cxx__context_global(v8::Local<v8::Object> *local_buf, v8::Context *context)
+    {
+        new (local_buf) v8::Local<v8::Object>(context->Global());
+    }
+
+    void v8cxx__context_detach_global(v8::Context *context)
+    {
+        context->DetachGlobal();
+    }
+
     v8::Isolate *v8cxx__context_get_isolate(v8::Context *context)
     {
         return context->GetIsolate();
+    }
+
+    v8::MicrotaskQueue *v8cxx__context_get_microtask_queue(v8::Context *context)
+    {
+        return context->GetMicrotaskQueue();
+    }
+
+    void v8cxx__context_set_microtask_queue(v8::Context *context, v8::MicrotaskQueue *microtask_queue)
+    {
+        context->SetMicrotaskQueue(microtask_queue);
     }
 }
 
