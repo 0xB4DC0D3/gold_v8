@@ -1,7 +1,9 @@
-use crate::{bindings, isolate::Isolate};
+use std::ops::{Deref, DerefMut};
+
+use crate::{bindings, context::Context, isolate::Isolate, local::Local};
 
 extern "C" {
-    fn v8cxx__handlescope_new(isolate: *mut Isolate) -> *mut HandleScope;
+    fn v8cxx__handlescope_new(buf: *mut HandleScope, isolate: *mut Isolate);
     fn v8cxx__handlescope_drop(this: *mut HandleScope);
     fn v8cxx__handlescope_get_isolate(this: *const HandleScope) -> *mut Isolate;
 }
@@ -11,8 +13,14 @@ pub struct HandleScope([u8; bindings::v8cxx__sizeof_handlescope]);
 
 impl HandleScope {
     #[inline(always)]
-    pub fn new(isolate: &mut Isolate) -> Option<&mut Self> {
-        unsafe { v8cxx__handlescope_new(isolate).as_mut() }
+    pub fn new(isolate: &mut Isolate) -> Self {
+        let mut buf = Self(Default::default());
+
+        unsafe {
+            v8cxx__handlescope_new(&mut buf, isolate);
+        }
+
+        buf
     }
 
     #[inline(always)]
@@ -23,7 +31,37 @@ impl HandleScope {
 
 impl Drop for HandleScope {
     fn drop(&mut self) {
-        println!("HandleScope::drop");
         unsafe { v8cxx__handlescope_drop(self) };
+    }
+}
+
+pub struct ContextScope(Local<Context>);
+
+impl ContextScope {
+    pub fn new(context: Local<Context>) -> Self {
+        let mut context_scope = Self(context);
+
+        context_scope.0.enter();
+        context_scope
+    }
+}
+
+impl Deref for ContextScope {
+    type Target = Local<Context>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
+impl DerefMut for ContextScope {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.0
+    }
+}
+
+impl Drop for ContextScope {
+    fn drop(&mut self) {
+        self.0.exit();
     }
 }

@@ -19,17 +19,16 @@ impl Context {
             v8cxx__context_new(&mut local_context, handle_scope.get_isolate().unwrap());
         }
 
-        local_context.enter();
         local_context
     }
 
     #[inline(always)]
-    fn enter(&mut self) {
+    pub(super) fn enter(&mut self) {
         unsafe { v8cxx__context_enter(self) };
     }
 
     #[inline(always)]
-    fn exit(&mut self) {
+    pub(super) fn exit(&mut self) {
         unsafe { v8cxx__context_exit(self) };
     }
 
@@ -40,9 +39,3 @@ impl Context {
 }
 
 impl Data for Context {}
-
-impl Drop for Context {
-    fn drop(&mut self) {
-        self.exit();
-    }
-}
