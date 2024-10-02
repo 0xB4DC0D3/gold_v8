@@ -33,6 +33,37 @@ impl FixedArray {
 
         local_data
     }
+
+    #[inline(always)]
+    pub fn iter<'a>(&'a self, context: &'a Local<Context>) -> FixedArrayIterator<'a> {
+        FixedArrayIterator {
+            fixed_array: self,
+            context,
+            index: 0,
+        }
+    }
 }
 
 impl Data for FixedArray {}
+
+pub struct FixedArrayIterator<'a> {
+    fixed_array: &'a FixedArray,
+    context: &'a Local<Context>,
+    index: isize,
+}
+
+impl<'a> Iterator for FixedArrayIterator<'a> {
+    type Item = Local<data::Data>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.index >= self.fixed_array.length() as isize {
+            None
+        } else {
+            let index = self.index;
+
+            self.index += 1;
+
+            Some(self.fixed_array.get(self.context, index as i32))
+        }
+    }
+}
