@@ -522,34 +522,34 @@ extern "C"
         return value.IsModuleNamespaceObject();
     }
 
-    void v8cxx__value_to_primitive(v8::Local<v8::Primitive> *local_buf, const v8::Value &value, const v8::Local<v8::Context> *context)
+    void v8cxx__value_to_primitive(v8::MaybeLocal<v8::Primitive> *maybe_local_buf, const v8::Value &value, const v8::Local<v8::Context> *context)
     {
-        new (local_buf) v8::Local<v8::Primitive>(value.ToPrimitive(*context).ToLocalChecked());
+        new (maybe_local_buf) v8::Local<v8::Primitive>(value.ToPrimitive(*context).ToLocalChecked());
     }
 
-    void v8cxx__value_to_bigint(v8::Local<v8::BigInt> *local_buf, const v8::Value &value, const v8::Local<v8::Context> *context)
+    void v8cxx__value_to_bigint(v8::MaybeLocal<v8::BigInt> *maybe_local_buf, const v8::Value &value, const v8::Local<v8::Context> *context)
     {
-        new (local_buf) v8::Local<v8::BigInt>(value.ToBigInt(*context).ToLocalChecked());
+        new (maybe_local_buf) v8::Local<v8::BigInt>(value.ToBigInt(*context).ToLocalChecked());
     }
 
-    void v8cxx__value_to_number(v8::Local<v8::Number> *local_buf, const v8::Value &value, const v8::Local<v8::Context> *context)
+    void v8cxx__value_to_number(v8::MaybeLocal<v8::Number> *maybe_local_buf, const v8::Value &value, const v8::Local<v8::Context> *context)
     {
-        new (local_buf) v8::Local<v8::Number>(value.ToNumber(*context).ToLocalChecked());
+        new (maybe_local_buf) v8::Local<v8::Number>(value.ToNumber(*context).ToLocalChecked());
     }
 
-    void v8cxx__value_to_string(v8::Local<v8::String> *local_buf, const v8::Value &value, const v8::Local<v8::Context> *context)
+    void v8cxx__value_to_string(v8::MaybeLocal<v8::String> *maybe_local_buf, const v8::Value &value, const v8::Local<v8::Context> *context)
     {
-        new (local_buf) v8::Local<v8::String>(value.ToString(*context).ToLocalChecked());
+        new (maybe_local_buf) v8::Local<v8::String>(value.ToString(*context).ToLocalChecked());
     }
 
-    void v8cxx__value_to_object(v8::Local<v8::Object> *local_buf, const v8::Value &value, const v8::Local<v8::Context> *context)
+    void v8cxx__value_to_object(v8::MaybeLocal<v8::Object> *maybe_local_buf, const v8::Value &value, const v8::Local<v8::Context> *context)
     {
-        new (local_buf) v8::Local<v8::Object>(value.ToObject(*context).ToLocalChecked());
+        new (maybe_local_buf) v8::Local<v8::Object>(value.ToObject(*context).ToLocalChecked());
     }
 
-    void v8cxx__value_to_boolean(v8::Local<v8::Boolean> *local_buf, const v8::Value &value, v8::Isolate *isolate)
+    void v8cxx__value_to_boolean(v8::MaybeLocal<v8::Boolean> *maybe_local_buf, const v8::Value &value, v8::Isolate *isolate)
     {
-        new (local_buf) v8::Local<v8::Boolean>(value.ToBoolean(isolate));
+        new (maybe_local_buf) v8::Local<v8::Boolean>(value.ToBoolean(isolate));
     }
 
     void v8cxx__value_typeof(v8::Local<v8::String> *local_buf, v8::Value &value, v8::Isolate *isolate)
