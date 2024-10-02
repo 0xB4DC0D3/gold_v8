@@ -10,6 +10,7 @@ pub mod bigint;
 pub mod boolean;
 pub mod context;
 pub mod data;
+pub mod fixed_array;
 pub mod isolate;
 pub mod local;
 pub mod microtask_queue;
