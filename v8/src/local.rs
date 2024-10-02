@@ -6,13 +6,21 @@ use std::{
 
 use crate::data::{self, traits::Data};
 
+extern "C" {
+    fn v8cxx__local_empty(local_buf: *mut Local<data::Data>);
+}
+
 #[repr(C)]
 pub struct Local<T: Data>(NonNull<T>);
 
 impl<T: Data> Local<T> {
     #[inline(always)]
     pub fn empty() -> Self {
-        Self(NonNull::dangling())
+        let mut local = Self(NonNull::dangling());
+
+        unsafe { v8cxx__local_empty(local.cast_mut()) };
+
+        local
     }
 
     #[inline(always)]
@@ -72,6 +80,11 @@ extern "C" {
 pub struct MaybeLocal<T: Data>(Local<T>);
 
 impl<T: Data> MaybeLocal<T> {
+    #[inline(always)]
+    pub fn empty() -> Self {
+        Self(Local::empty())
+    }
+
     #[inline(always)]
     pub fn cast<U: Data>(self) -> MaybeLocal<U> {
         MaybeLocal(self.0.cast())

@@ -769,23 +769,17 @@ extern "C"
     {
         new (local_buf) v8::Local<v8::Object>(v8::Object::New(isolate));
     }
+
     bool v8cxx__object_set(
         v8::Object *object,
         const v8::Local<v8::Context> *context,
         const v8::Local<v8::Value> *key,
         const v8::Local<v8::Value> *value,
-        const v8::Local<v8::Object> *receiver)
+        const v8::MaybeLocal<v8::Object> *receiver)
     {
         auto result = false;
 
-        if (receiver == nullptr)
-        {
-            object->Set(*context, *key, *value).FromMaybe(&result);
-        }
-        else
-        {
-            object->Set(*context, *key, *value, *receiver).FromMaybe(&result);
-        }
+        object->Set(*context, *key, *value, *receiver).FromMaybe(&result);
 
         return result;
     }
@@ -846,29 +840,22 @@ extern "C"
     // TODO: v8cxx__object_define_property
 
     void v8cxx__object_get(
-        v8::Local<v8::Value> *local_buf,
+        v8::MaybeLocal<v8::Value> *local_buf,
         v8::Object *object,
         const v8::Local<v8::Context> *context,
         const v8::Local<v8::Value> *key,
-        const v8::Local<v8::Object> *receiver)
+        const v8::MaybeLocal<v8::Object> *receiver)
     {
-        if (receiver == nullptr)
-        {
-            new (local_buf) v8::Local<v8::Value>(object->Get(*context, *key).ToLocalChecked());
-        }
-        else
-        {
-            new (local_buf) v8::Local<v8::Value>(object->Get(*context, *key, *receiver).ToLocalChecked());
-        }
+        new (local_buf) v8::MaybeLocal<v8::Value>(object->Get(*context, *key, *receiver));
     }
 
     void v8cxx__object_get_indexed(
-        v8::Local<v8::Value> *local_buf,
+        v8::MaybeLocal<v8::Value> *local_buf,
         v8::Object *object,
         const v8::Local<v8::Context> *context,
         uint32_t index)
     {
-        new (local_buf) v8::Local<v8::Value>(object->Get(*context, index).ToLocalChecked());
+        new (local_buf) v8::MaybeLocal<v8::Value>(object->Get(*context, index));
     }
 }
 
@@ -912,6 +899,15 @@ extern "C"
     int v8cxx__module_get_identity_hash(const v8::Module *module)
     {
         return module->GetIdentityHash();
+    }
+}
+
+// v8::Local
+extern "C"
+{
+    void v8cxx__local_empty(v8::Local<v8::Data> *local_buf)
+    {
+        new (local_buf) v8::Local<v8::Data>();
     }
 }
 

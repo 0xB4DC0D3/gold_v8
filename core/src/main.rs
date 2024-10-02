@@ -49,8 +49,9 @@ fn main() {
                 None
             )
             .cast::<v8::string::String>()
+            .to_local_checked()
             .as_str(&handle_scope)
-        )
+        );
     }
 
     v8::v8::dispose();
