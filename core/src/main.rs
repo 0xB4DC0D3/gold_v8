@@ -18,7 +18,7 @@ fn main() {
         );
         let isolate = v8::isolate::Isolate::new(isolate_create_params).unwrap();
         let handle_scope = v8::scope::HandleScope::new(isolate);
-        let context = v8::context::Context::new(&handle_scope);
+        let context = v8::context::Context::new(&handle_scope, None);
         let context_scope = v8::scope::ContextScope::new(context);
 
         let source = v8::string::String::new(&handle_scope, r#""hello, " + "world""#);
