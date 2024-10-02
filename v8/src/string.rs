@@ -1,13 +1,13 @@
 use core::str;
 
 use crate::{
-    data::traits::Data, isolate::Isolate, local::Local, primitive::traits::Primitive,
+    data::traits::Data, isolate::Isolate, local::{Local, MaybeLocal}, primitive::traits::Primitive,
     scope::HandleScope, value::traits::Value,
 };
 
 extern "C" {
     fn v8cxx__string_new_from_utf8(
-        local_buf: *mut Local<String>,
+        maybe_local_buf: *mut MaybeLocal<String>,
         isolate: *mut Isolate,
         value: *const u8,
         string_type: NewStringType,
@@ -15,7 +15,7 @@ extern "C" {
     );
 
     fn v8cxx__string_new_from_onebyte(
-        local_buf: *mut Local<String>,
+        maybe_local_buf: *mut MaybeLocal<String>,
         isolate: *mut Isolate,
         value: *const u8,
         string_type: NewStringType,
@@ -23,7 +23,7 @@ extern "C" {
     );
 
     fn v8cxx__string_new_from_twobyte(
-        local_buf: *mut Local<String>,
+        maybe_local_buf: *mut MaybeLocal<String>,
         isolate: *mut Isolate,
         value: *const u16,
         string_type: NewStringType,
@@ -57,7 +57,7 @@ pub struct String([u8; 0]);
 
 impl String {
     #[inline(always)]
-    pub fn new(handle_scope: &HandleScope, value: &str) -> Local<Self> {
+    pub fn new(handle_scope: &HandleScope, value: &str) -> MaybeLocal<Self> {
         Self::new_from_utf8(handle_scope, value, NewStringType::Normal)
     }
 
@@ -66,12 +66,12 @@ impl String {
         handle_scope: &HandleScope,
         value: &str,
         string_type: NewStringType,
-    ) -> Local<Self> {
-        let mut local_string = Local::<Self>::empty();
+    ) -> MaybeLocal<Self> {
+        let mut maybe_local_string = MaybeLocal::<Self>::empty();
 
         unsafe {
             v8cxx__string_new_from_utf8(
-                &mut local_string,
+                &mut maybe_local_string,
                 handle_scope.get_isolate().unwrap(),
                 value.as_ptr(),
                 string_type,
@@ -79,7 +79,7 @@ impl String {
             );
         }
 
-        local_string
+        maybe_local_string
     }
 
     #[inline(always)]
@@ -87,12 +87,12 @@ impl String {
         handle_scope: &HandleScope,
         value: &[u8],
         string_type: NewStringType,
-    ) -> Local<Self> {
-        let mut local_string = Local::<Self>::empty();
+    ) -> MaybeLocal<Self> {
+        let mut maybe_local_string = MaybeLocal::<Self>::empty();
 
         unsafe {
             v8cxx__string_new_from_onebyte(
-                &mut local_string,
+                &mut maybe_local_string,
                 handle_scope.get_isolate().unwrap(),
                 value.as_ptr(),
                 string_type,
@@ -100,7 +100,7 @@ impl String {
             );
         }
 
-        local_string
+        maybe_local_string
     }
 
     #[inline(always)]
@@ -108,12 +108,12 @@ impl String {
         handle_scope: &HandleScope,
         value: &[u16],
         string_type: NewStringType,
-    ) -> Local<Self> {
-        let mut local_string = Local::<Self>::empty();
+    ) -> MaybeLocal<Self> {
+        let mut maybe_local_string = MaybeLocal::<Self>::empty();
 
         unsafe {
             v8cxx__string_new_from_twobyte(
-                &mut local_string,
+                &mut maybe_local_string,
                 handle_scope.get_isolate().unwrap(),
                 value.as_ptr(),
                 string_type,
@@ -121,7 +121,7 @@ impl String {
             );
         }
 
-        local_string
+        maybe_local_string
     }
 
     #[inline(always)]

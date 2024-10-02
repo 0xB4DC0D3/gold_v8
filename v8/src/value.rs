@@ -1,6 +1,14 @@
 use crate::{
-    bigint::BigInt, boolean::Boolean, context::Context, data::traits::Data, isolate::Isolate,
-    local::Local, number::Number, object::Object, primitive::Primitive, string::String,
+    bigint::BigInt,
+    boolean::Boolean,
+    context::Context,
+    data::traits::Data,
+    isolate::Isolate,
+    local::{Local, MaybeLocal},
+    number::Number,
+    object::Object,
+    primitive::Primitive,
+    string::String,
 };
 
 extern "C" {
@@ -64,27 +72,27 @@ extern "C" {
     fn v8cxx__value_is_wasm_null(value: *const Value) -> bool;
     fn v8cxx__value_is_module_namespace_object(value: *const Value) -> bool;
     fn v8cxx__value_to_primitive(
-        local_buf: *mut Local<Primitive>,
+        maybe_local_buf: *mut MaybeLocal<Primitive>,
         value: *const Value,
         context: *const Local<Context>,
     );
     fn v8cxx__value_to_bigint(
-        local_buf: *mut Local<BigInt>,
+        maybe_local_buf: *mut MaybeLocal<BigInt>,
         value: *const Value,
         context: *const Local<Context>,
     );
     fn v8cxx__value_to_number(
-        local_buf: *mut Local<Number>,
+        maybe_local_buf: *mut MaybeLocal<Number>,
         value: *const Value,
         context: *const Local<Context>,
     );
     fn v8cxx__value_to_string(
-        local_buf: *mut Local<String>,
+        maybe_local_buf: *mut MaybeLocal<String>,
         value: *const Value,
         context: *const Local<Context>,
     );
     fn v8cxx__value_to_object(
-        local_buf: *mut Local<Object>,
+        maybe_local_buf: *mut MaybeLocal<Object>,
         value: *const Value,
         context: *const Local<Context>,
     );
@@ -93,7 +101,11 @@ extern "C" {
         value: *const Value,
         context: *const Local<Context>,
     );
-    fn v8cxx__value_typeof(local_buf: *mut Local<String>, value: *mut Value, isolate: *mut Isolate);
+    fn v8cxx__value_typeof(
+        local_buf: *mut Local<String>,
+        value: *mut Value,
+        isolate: *mut Isolate,
+    );
     fn v8cxx__value_instanceof(
         this: *const Value,
         context: *const Local<Context>,
@@ -352,72 +364,80 @@ pub mod traits {
             unsafe { v8cxx__value_is_module_namespace_object(self as *const _ as *const _) }
         }
 
-        fn to_primitive(&self, context: &Local<Context>) -> Local<Primitive> {
-            let mut local_primitive = Local::<Primitive>::empty();
+        fn to_primitive(&self, context: &Local<Context>) -> MaybeLocal<Primitive> {
+            let mut maybe_local_primitive = MaybeLocal::<Primitive>::empty();
 
             unsafe {
                 v8cxx__value_to_primitive(
-                    &mut local_primitive,
+                    &mut maybe_local_primitive,
                     self as *const _ as *const _,
                     context,
                 );
             }
 
-            local_primitive
+            maybe_local_primitive
         }
 
-        fn to_bigint(&self, context: &Local<Context>) -> Local<BigInt> {
-            let mut local_primitive = Local::<BigInt>::empty();
+        fn to_bigint(&self, context: &Local<Context>) -> MaybeLocal<BigInt> {
+            let mut maybe_local_bigint = MaybeLocal::<BigInt>::empty();
 
             unsafe {
-                v8cxx__value_to_bigint(&mut local_primitive, self as *const _ as *const _, context);
+                v8cxx__value_to_bigint(
+                    &mut maybe_local_bigint,
+                    self as *const _ as *const _,
+                    context,
+                );
             }
 
-            local_primitive
+            maybe_local_bigint
         }
 
-        fn to_number(&self, context: &Local<Context>) -> Local<Number> {
-            let mut local_primitive = Local::<Number>::empty();
+        fn to_number(&self, context: &Local<Context>) -> MaybeLocal<Number> {
+            let mut maybe_local_number = MaybeLocal::<Number>::empty();
 
             unsafe {
-                v8cxx__value_to_number(&mut local_primitive, self as *const _ as *const _, context);
+                v8cxx__value_to_number(
+                    &mut maybe_local_number,
+                    self as *const _ as *const _,
+                    context,
+                );
             }
 
-            local_primitive
+            maybe_local_number
         }
 
-        fn to_string(&self, context: &Local<Context>) -> Local<String> {
-            let mut local_primitive = Local::<String>::empty();
+        fn to_string(&self, context: &Local<Context>) -> MaybeLocal<String> {
+            let mut maybe_local_string = MaybeLocal::<String>::empty();
 
             unsafe {
-                v8cxx__value_to_string(&mut local_primitive, self as *const _ as *const _, context);
+                v8cxx__value_to_string(&mut maybe_local_string, self as *const _ as *const _, context);
             }
 
-            local_primitive
+            maybe_local_string
         }
 
-        fn to_object(&self, context: &Local<Context>) -> Local<Object> {
-            let mut local_primitive = Local::<Object>::empty();
+        fn to_object(&self, context: &Local<Context>) -> MaybeLocal<Object> {
+            let mut maybe_local_object = MaybeLocal::<Object>::empty();
 
             unsafe {
-                v8cxx__value_to_object(&mut local_primitive, self as *const _ as *const _, context);
+                v8cxx__value_to_object(&mut maybe_local_object, self as *const _ as *const _, context);
             }
 
-            local_primitive
+            maybe_local_object
         }
 
         fn to_boolean(&self, context: &Local<Context>) -> Local<Boolean> {
-            let mut local_primitive = Local::<Boolean>::empty();
+            let mut local_boolean = Local::<Boolean>::empty();
 
             unsafe {
                 v8cxx__value_to_boolean(
-                    &mut local_primitive,
+                    &mut local_boolean,
                     self as *const _ as *const _,
                     context,
                 );
             }
 
-            local_primitive
+            local_boolean
         }
 
         fn type_of(&mut self, isolate: &mut Isolate) -> Local<String> {

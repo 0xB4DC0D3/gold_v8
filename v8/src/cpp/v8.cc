@@ -522,29 +522,29 @@ extern "C"
         return value.IsModuleNamespaceObject();
     }
 
-    void v8cxx__value_to_primitive(v8::Local<v8::Primitive> *local_buf, const v8::Value &value, const v8::Local<v8::Context> *context)
+    void v8cxx__value_to_primitive(v8::MaybeLocal<v8::Primitive> *maybe_local_buf, const v8::Value &value, const v8::Local<v8::Context> *context)
     {
-        new (local_buf) v8::Local<v8::Primitive>(value.ToPrimitive(*context).ToLocalChecked());
+        new (maybe_local_buf) v8::MaybeLocal<v8::Primitive>(value.ToPrimitive(*context));
     }
 
-    void v8cxx__value_to_bigint(v8::Local<v8::BigInt> *local_buf, const v8::Value &value, const v8::Local<v8::Context> *context)
+    void v8cxx__value_to_bigint(v8::MaybeLocal<v8::BigInt> *maybe_local_buf, const v8::Value &value, const v8::Local<v8::Context> *context)
     {
-        new (local_buf) v8::Local<v8::BigInt>(value.ToBigInt(*context).ToLocalChecked());
+        new (maybe_local_buf) v8::MaybeLocal<v8::BigInt>(value.ToBigInt(*context));
     }
 
-    void v8cxx__value_to_number(v8::Local<v8::Number> *local_buf, const v8::Value &value, const v8::Local<v8::Context> *context)
+    void v8cxx__value_to_number(v8::MaybeLocal<v8::Number> *maybe_local_buf, const v8::Value &value, const v8::Local<v8::Context> *context)
     {
-        new (local_buf) v8::Local<v8::Number>(value.ToNumber(*context).ToLocalChecked());
+        new (maybe_local_buf) v8::MaybeLocal<v8::Number>(value.ToNumber(*context));
     }
 
-    void v8cxx__value_to_string(v8::Local<v8::String> *local_buf, const v8::Value &value, const v8::Local<v8::Context> *context)
+    void v8cxx__value_to_string(v8::MaybeLocal<v8::String> *maybe_local_buf, const v8::Value &value, const v8::Local<v8::Context> *context)
     {
-        new (local_buf) v8::Local<v8::String>(value.ToString(*context).ToLocalChecked());
+        new (maybe_local_buf) v8::MaybeLocal<v8::String>(value.ToString(*context));
     }
 
-    void v8cxx__value_to_object(v8::Local<v8::Object> *local_buf, const v8::Value &value, const v8::Local<v8::Context> *context)
+    void v8cxx__value_to_object(v8::MaybeLocal<v8::Object> *maybe_local_buf, const v8::Value &value, const v8::Local<v8::Context> *context)
     {
-        new (local_buf) v8::Local<v8::Object>(value.ToObject(*context).ToLocalChecked());
+        new (maybe_local_buf) v8::MaybeLocal<v8::Object>(value.ToObject(*context));
     }
 
     void v8cxx__value_to_boolean(v8::Local<v8::Boolean> *local_buf, const v8::Value &value, v8::Isolate *isolate)
@@ -594,19 +594,19 @@ extern "C"
 // v8::String
 extern "C"
 {
-    void v8cxx__string_new_from_utf8(v8::Local<v8::String> *local_buf, v8::Isolate *isolate, const char *value, v8::NewStringType type, int length)
+    void v8cxx__string_new_from_utf8(v8::MaybeLocal<v8::String> *maybe_local_buf, v8::Isolate *isolate, const char *value, v8::NewStringType type, int length)
     {
-        new (local_buf) v8::Local<v8::String>(v8::String::NewFromUtf8(isolate, value, type, length).ToLocalChecked());
+        new (maybe_local_buf) v8::MaybeLocal<v8::String>(v8::String::NewFromUtf8(isolate, value, type, length));
     }
 
-    void v8cxx__string_new_from_onebyte(v8::Local<v8::String> *local_buf, v8::Isolate *isolate, const uint8_t *value, v8::NewStringType type, int length)
+    void v8cxx__string_new_from_onebyte(v8::MaybeLocal<v8::String> *maybe_local_buf, v8::Isolate *isolate, const uint8_t *value, v8::NewStringType type, int length)
     {
-        new (local_buf) v8::Local<v8::String>(v8::String::NewFromOneByte(isolate, value, type, length).ToLocalChecked());
+        new (maybe_local_buf) v8::MaybeLocal<v8::String>(v8::String::NewFromOneByte(isolate, value, type, length));
     }
 
-    void v8cxx__string_new_from_twobyte(v8::Local<v8::String> *local_buf, v8::Isolate *isolate, const uint16_t *value, v8::NewStringType type, int length)
+    void v8cxx__string_new_from_twobyte(v8::MaybeLocal<v8::String> *maybe_local_buf, v8::Isolate *isolate, const uint16_t *value, v8::NewStringType type, int length)
     {
-        new (local_buf) v8::Local<v8::String>(v8::String::NewFromTwoByte(isolate, value, type, length).ToLocalChecked());
+        new (maybe_local_buf) v8::MaybeLocal<v8::String>(v8::String::NewFromTwoByte(isolate, value, type, length));
     }
 
     int v8cxx__string_length(const v8::String &string)
@@ -742,14 +742,14 @@ extern "C"
 // v8::Script
 extern "C"
 {
-    void v8cxx__script_compile(v8::Local<v8::Script> *local_buf, const v8::Local<v8::Context> *context, const v8::Local<v8::String> *source)
+    void v8cxx__script_compile(v8::MaybeLocal<v8::Script> *maybe_local_buf, const v8::Local<v8::Context> *context, const v8::Local<v8::String> *source)
     {
-        new (local_buf) v8::Local<v8::Script>(v8::Script::Compile(*context, *source).ToLocalChecked());
+        new (maybe_local_buf) v8::MaybeLocal<v8::Script>(v8::Script::Compile(*context, *source));
     }
 
-    void v8cxx__script_run(v8::Local<v8::Value> *local_buf, v8::Script *script, const v8::Local<v8::Context> *context)
+    void v8cxx__script_run(v8::MaybeLocal<v8::Value> *maybe_local_buf, v8::Script *script, const v8::Local<v8::Context> *context)
     {
-        new (local_buf) v8::Local<v8::Value>(script->Run(*context).ToLocalChecked());
+        new (maybe_local_buf) v8::MaybeLocal<v8::Value>(script->Run(*context));
     }
 }
 
@@ -769,23 +769,17 @@ extern "C"
     {
         new (local_buf) v8::Local<v8::Object>(v8::Object::New(isolate));
     }
+
     bool v8cxx__object_set(
         v8::Object *object,
         const v8::Local<v8::Context> *context,
         const v8::Local<v8::Value> *key,
         const v8::Local<v8::Value> *value,
-        const v8::Local<v8::Object> *receiver)
+        const v8::MaybeLocal<v8::Object> *receiver)
     {
         auto result = false;
 
-        if (receiver == nullptr)
-        {
-            object->Set(*context, *key, *value).FromMaybe(&result);
-        }
-        else
-        {
-            object->Set(*context, *key, *value, *receiver).FromMaybe(&result);
-        }
+        object->Set(*context, *key, *value, *receiver).FromMaybe(&result);
 
         return result;
     }
@@ -846,29 +840,22 @@ extern "C"
     // TODO: v8cxx__object_define_property
 
     void v8cxx__object_get(
-        v8::Local<v8::Value> *local_buf,
+        v8::MaybeLocal<v8::Value> *maybe_local_buf,
         v8::Object *object,
         const v8::Local<v8::Context> *context,
         const v8::Local<v8::Value> *key,
-        const v8::Local<v8::Object> *receiver)
+        const v8::MaybeLocal<v8::Object> *receiver)
     {
-        if (receiver == nullptr)
-        {
-            new (local_buf) v8::Local<v8::Value>(object->Get(*context, *key).ToLocalChecked());
-        }
-        else
-        {
-            new (local_buf) v8::Local<v8::Value>(object->Get(*context, *key, *receiver).ToLocalChecked());
-        }
+        new (maybe_local_buf) v8::MaybeLocal<v8::Value>(object->Get(*context, *key, *receiver));
     }
 
     void v8cxx__object_get_indexed(
-        v8::Local<v8::Value> *local_buf,
+        v8::MaybeLocal<v8::Value> *maybe_local_buf,
         v8::Object *object,
         const v8::Local<v8::Context> *context,
         uint32_t index)
     {
-        new (local_buf) v8::Local<v8::Value>(object->Get(*context, index).ToLocalChecked());
+        new (maybe_local_buf) v8::MaybeLocal<v8::Value>(object->Get(*context, index));
     }
 }
 
@@ -883,5 +870,67 @@ extern "C"
     void v8cxx__fixed_array_get(v8::Local<v8::Data> *local_buf, const v8::FixedArray *fixed_array, const v8::Local<v8::Context> *context, int i)
     {
         new (local_buf) v8::Local<v8::Data>(fixed_array->Get(*context, i));
+    }
+}
+
+// v8::Module
+extern "C"
+{
+    v8::Module::Status v8cxx__module_get_status(const v8::Module *module)
+    {
+        return module->GetStatus();
+    }
+
+    void v8cxx__module_get_exception(v8::Local<v8::Value> *local_buf, const v8::Module *module)
+    {
+        new (local_buf) v8::Local<v8::Value>(module->GetException());
+    }
+
+    void v8cxx__module_get_module_requests(v8::Local<v8::FixedArray> *local_buf, const v8::Module *module)
+    {
+        new (local_buf) v8::Local<v8::FixedArray>(module->GetModuleRequests());
+    }
+
+    v8::Location v8cxx__module_source_offset_to_location(const v8::Module *module, int offset)
+    {
+        return module->SourceOffsetToLocation(offset);
+    }
+
+    int v8cxx__module_get_identity_hash(const v8::Module *module)
+    {
+        return module->GetIdentityHash();
+    }
+}
+
+// v8::Local
+extern "C"
+{
+    void v8cxx__local_empty(v8::Local<v8::Data> *local_buf)
+    {
+        new (local_buf) v8::Local<v8::Data>();
+    }
+}
+
+// v8::MaybeLocal
+extern "C"
+{
+    bool v8cxx__maybe_local_is_empty(const v8::MaybeLocal<v8::Data> *maybe_local)
+    {
+        return maybe_local->IsEmpty();
+    }
+
+    bool v8cxx__maybe_local_to_local(const v8::MaybeLocal<v8::Data> *maybe_local, v8::Local<v8::Data> *out)
+    {
+        return maybe_local->ToLocal(out);
+    }
+
+    void v8cxx__maybe_local_to_local_checked(v8::Local<v8::Data> *local_buf, v8::MaybeLocal<v8::Data> *maybe_local)
+    {
+        new (local_buf) v8::Local<v8::Data>(maybe_local->ToLocalChecked());
+    }
+
+    void v8cxx__maybe_local_from_maybe(v8::Local<v8::Data> *local_buf, const v8::MaybeLocal<v8::Data> *maybe_local, const v8::Local<v8::Data> *default_value)
+    {
+        new (local_buf) v8::Local<v8::Data>(maybe_local->FromMaybe(*default_value));
     }
 }

@@ -1,14 +1,14 @@
-use crate::{context::Context, data::traits::Data, local::Local, string::String, value::Value};
+use crate::{context::Context, data::traits::Data, local::{Local, MaybeLocal}, string::String, value::Value};
 
 extern "C" {
     fn v8cxx__script_compile(
-        local_buf: *mut Local<Script>,
+        maybe_local_buf: *mut MaybeLocal<Script>,
         context: *const Local<Context>,
         source: *const Local<String>,
     );
 
     fn v8cxx__script_run(
-        local_buf: *mut Local<Value>,
+        maybe_local_buf: *mut MaybeLocal<Value>,
         script: *mut Script,
         context: *const Local<Context>,
     );
@@ -19,23 +19,23 @@ pub struct Script([u8; 0]);
 
 impl Script {
     #[inline(always)]
-    pub fn compile(context: &Local<Context>, source: &Local<String>) -> Local<Self> {
-        let mut local_script = Local::<Self>::empty();
+    pub fn compile(context: &Local<Context>, source: &Local<String>) -> MaybeLocal<Self> {
+        let mut maybe_local_script = MaybeLocal::<Self>::empty();
 
-        unsafe { v8cxx__script_compile(&mut local_script, context, source) };
+        unsafe { v8cxx__script_compile(&mut maybe_local_script, context, source) };
 
-        local_script
+        maybe_local_script
     }
 
     #[inline(always)]
-    pub fn run(&mut self, context: &Local<Context>) -> Local<Value> {
-        let mut local_value = Local::<Value>::empty();
+    pub fn run(&mut self, context: &Local<Context>) -> MaybeLocal<Value> {
+        let mut maybe_local_value = MaybeLocal::<Value>::empty();
 
         unsafe {
-            v8cxx__script_run(&mut local_value, self, context);
+            v8cxx__script_run(&mut maybe_local_value, self, context);
         }
 
-        local_value
+        maybe_local_value
     }
 }
 
