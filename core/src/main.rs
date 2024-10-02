@@ -20,11 +20,7 @@ fn main() {
         let handle_scope = v8::scope::HandleScope::new(isolate).unwrap();
         let context = v8::context::Context::new(handle_scope);
 
-        let source = v8::string::String::new_from_utf8(
-            handle_scope,
-            r#""hello, " + "world""#,
-            v8::string::NewStringType::Normal,
-        );
+        let source = v8::string::String::new(handle_scope, r#""hello, " + "world""#);
 
         let mut script = v8::script::Script::compile(&context, &source);
 
@@ -36,20 +32,11 @@ fn main() {
         );
 
         let mut test = v8::object::Object::new(handle_scope);
+
         test.set(
             &context,
-            &v8::string::String::new_from_utf8(
-                handle_scope,
-                "test",
-                v8::string::NewStringType::Normal,
-            )
-            .cast(),
-            &v8::string::String::new_from_utf8(
-                handle_scope,
-                "test",
-                v8::string::NewStringType::Normal,
-            )
-            .cast(),
+            &v8::string::String::new(handle_scope, "test"),
+            &v8::string::String::new(handle_scope, "test"),
             None,
         );
 
@@ -57,12 +44,7 @@ fn main() {
             "{{ test: {} }}",
             test.get(
                 &context,
-                &v8::string::String::new_from_utf8(
-                    handle_scope,
-                    "test",
-                    v8::string::NewStringType::Normal
-                )
-                .cast(),
+                &v8::string::String::new(handle_scope, "test"),
                 None
             )
             .cast::<v8::string::String>()

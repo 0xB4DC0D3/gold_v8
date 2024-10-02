@@ -12,7 +12,7 @@ pub struct Primitive([u8; 0]);
 
 impl Primitive {
     #[inline(always)]
-    pub fn undefined(handle_scope: &mut HandleScope) -> Local<Self> {
+    pub fn undefined(handle_scope: &HandleScope) -> Local<Self> {
         let mut local_primitive = Local::<Self>::empty();
 
         unsafe {
@@ -23,7 +23,7 @@ impl Primitive {
     }
 
     #[inline(always)]
-    pub fn null(handle_scope: &mut HandleScope) -> Local<Self> {
+    pub fn null(handle_scope: &HandleScope) -> Local<Self> {
         let mut local_primitive = Local::<Self>::empty();
 
         unsafe { v8cxx__primitive_null(&mut local_primitive, handle_scope.get_isolate().unwrap()) };

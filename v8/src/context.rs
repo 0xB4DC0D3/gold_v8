@@ -12,7 +12,7 @@ pub struct Context([u8; 0]);
 
 impl Context {
     #[inline(always)]
-    pub fn new(handle_scope: &mut HandleScope) -> Local<Self> {
+    pub fn new(handle_scope: &HandleScope) -> Local<Self> {
         let mut local_context = Local::<Self>::empty();
 
         unsafe {

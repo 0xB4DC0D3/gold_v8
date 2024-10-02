@@ -3,7 +3,7 @@ use crate::{bindings, isolate::Isolate};
 extern "C" {
     fn v8cxx__handlescope_new(isolate: *mut Isolate) -> *mut HandleScope;
     fn v8cxx__handlescope_drop(this: *mut HandleScope);
-    fn v8cxx__handlescope_get_isolate(this: *mut HandleScope) -> *mut Isolate;
+    fn v8cxx__handlescope_get_isolate(this: *const HandleScope) -> *mut Isolate;
 }
 
 #[repr(C)]
@@ -16,7 +16,7 @@ impl HandleScope {
     }
 
     #[inline(always)]
-    pub fn get_isolate(&mut self) -> Option<&mut Isolate> {
+    pub fn get_isolate(&self) -> Option<&mut Isolate> {
         unsafe { v8cxx__handlescope_get_isolate(self).as_mut() }
     }
 }

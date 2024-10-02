@@ -1,4 +1,5 @@
 use std::{
+    mem::transmute,
     ops::{Deref, DerefMut},
     ptr::NonNull,
 };
@@ -17,6 +18,16 @@ impl<T: Data> Local<T> {
     #[inline(always)]
     pub fn cast<U: Data>(self) -> Local<U> {
         Local(self.0.cast())
+    }
+
+    #[inline(always)]
+    pub fn cast_ref<U: Data>(&self) -> &Local<U> {
+        unsafe { transmute(self) }
+    }
+
+    #[inline(always)]
+    pub fn cast_mut<U: Data>(&mut self) -> &mut Local<U> {
+        unsafe { transmute(self) }
     }
 }
 

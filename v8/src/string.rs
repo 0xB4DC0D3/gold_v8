@@ -57,8 +57,13 @@ pub struct String([u8; 0]);
 
 impl String {
     #[inline(always)]
+    pub fn new(handle_scope: &HandleScope, value: &str) -> Local<Self> {
+        Self::new_from_utf8(handle_scope, value, NewStringType::Normal)
+    }
+
+    #[inline(always)]
     pub fn new_from_utf8(
-        handle_scope: &mut HandleScope,
+        handle_scope: &HandleScope,
         value: &str,
         string_type: NewStringType,
     ) -> Local<Self> {
@@ -79,7 +84,7 @@ impl String {
 
     #[inline(always)]
     pub fn new_from_onebyte(
-        handle_scope: &mut HandleScope,
+        handle_scope: &HandleScope,
         value: &[u8],
         string_type: NewStringType,
     ) -> Local<Self> {
@@ -100,7 +105,7 @@ impl String {
 
     #[inline(always)]
     pub fn new_from_twobyte(
-        handle_scope: &mut HandleScope,
+        handle_scope: &HandleScope,
         value: &[u16],
         string_type: NewStringType,
     ) -> Local<Self> {
@@ -166,7 +171,7 @@ impl String {
     }
 
     #[inline(always)]
-    pub fn as_str(&self, handle_scope: &mut HandleScope) -> &str {
+    pub fn as_str(&self, handle_scope: &HandleScope) -> &str {
         unsafe {
             let length = self.length() as usize;
             let str_buffer = v8cxx__string_view(self, handle_scope.get_isolate().unwrap());

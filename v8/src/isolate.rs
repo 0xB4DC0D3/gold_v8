@@ -8,7 +8,7 @@ extern "C" {
     fn v8cxx__isolate_new(create_params: *const IsolateCreateParams) -> *mut Isolate;
     fn v8cxx__isolate_enter(this: *mut Isolate);
     fn v8cxx__isolate_exit(this: *mut Isolate);
-    fn v8cxx__isolate_get_current(this: *mut Isolate) -> *mut Isolate;
+    fn v8cxx__isolate_get_current() -> *mut Isolate;
     fn v8cxx__isolate_get_current_context(local_buf: *mut Local<Context>, this: *mut Isolate);
 }
 
@@ -47,8 +47,8 @@ impl Isolate {
     }
 
     #[inline(always)]
-    pub fn get_current(&mut self) -> Option<&mut Self> {
-        unsafe { v8cxx__isolate_get_current(self).as_mut() }
+    pub fn get_current<'a>() -> Option<&'a mut Self> {
+        unsafe { v8cxx__isolate_get_current().as_mut() }
     }
 
     #[inline(always)]

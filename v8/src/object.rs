@@ -65,7 +65,7 @@ pub struct Object([u8; 0]);
 
 impl Object {
     #[inline(always)]
-    pub fn new(handle_scope: &mut HandleScope) -> Local<Self> {
+    pub fn new(handle_scope: &HandleScope) -> Local<Self> {
         let mut local_object = Local::<Self>::empty();
 
         unsafe {
@@ -81,12 +81,7 @@ impl value::traits::Value for Object {}
 impl traits::Object for Object {}
 
 pub mod traits {
-    use crate::{
-        context::Context,
-        local::Local,
-        name::Name,
-        value::{self, traits::Value},
-    };
+    use crate::{local::Local, name::traits::Name, value::traits::Value};
 
     use super::*;
 
@@ -94,16 +89,16 @@ pub mod traits {
         fn set(
             &mut self,
             context: &Local<Context>,
-            key: &Local<value::Value>,
-            value: &Local<value::Value>,
+            key: &Local<impl Value>,
+            value: &Local<impl Value>,
             receiver: Option<&Local<super::Object>>,
         ) {
             unsafe {
                 v8cxx__object_set(
                     self as *mut _ as *mut _,
                     context,
-                    key,
-                    value,
+                    key.cast_ref(),
+                    value.cast_ref(),
                     match receiver {
                         Some(receiver) => receiver,
                         None => std::ptr::null::<Local<super::Object>>(),
@@ -112,23 +107,30 @@ pub mod traits {
             };
         }
 
-        fn set_indexed(
-            &mut self,
-            context: &Local<Context>,
-            index: u32,
-            value: &Local<value::Value>,
-        ) {
-            unsafe { v8cxx__object_set_indexed(self as *mut _ as *mut _, context, index, value) };
+        fn set_indexed(&mut self, context: &Local<Context>, index: u32, value: &Local<impl Value>) {
+            unsafe {
+                v8cxx__object_set_indexed(
+                    self as *mut _ as *mut _,
+                    context,
+                    index,
+                    value.cast_ref(),
+                )
+            };
         }
 
         fn create_data_property(
             &mut self,
             context: &Local<Context>,
-            key: &Local<Name>,
-            value: &Local<value::Value>,
+            key: &Local<impl Name>,
+            value: &Local<impl Value>,
         ) {
             unsafe {
-                v8cxx__object_create_data_property(self as *mut _ as *mut _, context, key, value)
+                v8cxx__object_create_data_property(
+                    self as *mut _ as *mut _,
+                    context,
+                    key.cast_ref(),
+                    value.cast_ref(),
+                )
             };
         }
 
@@ -136,14 +138,14 @@ pub mod traits {
             &mut self,
             context: &Local<Context>,
             index: u32,
-            value: &Local<value::Value>,
+            value: &Local<impl Value>,
         ) {
             unsafe {
                 v8cxx__object_create_data_property_indexed(
                     self as *mut _ as *mut _,
                     context,
                     index,
-                    value,
+                    value.cast_ref(),
                 )
             };
         }
@@ -151,16 +153,16 @@ pub mod traits {
         fn define_own_property(
             &mut self,
             context: &Local<Context>,
-            key: &Local<Name>,
-            value: &Local<value::Value>,
+            key: &Local<impl Name>,
+            value: &Local<impl Value>,
             attributes: PropertyAttribute,
         ) -> bool {
             unsafe {
                 v8cxx__object_define_own_property(
                     self as *mut _ as *mut _,
                     context,
-                    key,
-                    value,
+                    key.cast_ref(),
+                    value.cast_ref(),
                     attributes,
                 )
             }
@@ -169,7 +171,7 @@ pub mod traits {
         fn get(
             &mut self,
             context: &Local<Context>,
-            key: &Local<value::Value>,
+            key: &Local<impl Value>,
             receiver: Option<&Local<super::Object>>,
         ) -> Local<value::Value> {
             let mut local_value = Local::<value::Value>::empty();
@@ -179,7 +181,7 @@ pub mod traits {
                     &mut local_value,
                     self as *mut _ as *mut _,
                     context,
-                    key,
+                    key.cast_ref(),
                     match receiver {
                         Some(receiver) => receiver,
                         None => std::ptr::null::<Local<super::Object>>(),
