@@ -21,7 +21,7 @@ fn main() {
         let context = v8::context::Context::new(&handle_scope, None);
         let context_scope = v8::scope::ContextScope::new(context);
 
-        let source = v8::string::String::new(&handle_scope, r#""hello, " + "world""#);
+        let source = v8::string::String::new(&handle_scope, r#""hello, " + "world""#).to_local_checked();
 
         let mut script = v8::script::Script::compile(&context_scope, &source);
 
@@ -39,8 +39,8 @@ fn main() {
 
         test.set(
             &context_scope,
-            &v8::string::String::new(&handle_scope, "test"),
-            &v8::string::String::new(&handle_scope, "test"),
+            &v8::string::String::new(&handle_scope, "test").to_local_checked(),
+            &v8::string::String::new(&handle_scope, "test").to_local_checked(),
             None,
         );
 
@@ -48,7 +48,7 @@ fn main() {
             "{{ test: {} }}",
             test.get(
                 &context_scope,
-                &v8::string::String::new(&handle_scope, "test"),
+                &v8::string::String::new(&handle_scope, "test").to_local_checked(),
                 None
             )
             .cast::<v8::string::String>()

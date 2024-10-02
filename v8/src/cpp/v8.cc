@@ -594,19 +594,19 @@ extern "C"
 // v8::String
 extern "C"
 {
-    void v8cxx__string_new_from_utf8(v8::Local<v8::String> *local_buf, v8::Isolate *isolate, const char *value, v8::NewStringType type, int length)
+    void v8cxx__string_new_from_utf8(v8::MaybeLocal<v8::String> *maybe_local_buf, v8::Isolate *isolate, const char *value, v8::NewStringType type, int length)
     {
-        new (local_buf) v8::Local<v8::String>(v8::String::NewFromUtf8(isolate, value, type, length).ToLocalChecked());
+        new (maybe_local_buf) v8::MaybeLocal<v8::String>(v8::String::NewFromUtf8(isolate, value, type, length));
     }
 
-    void v8cxx__string_new_from_onebyte(v8::Local<v8::String> *local_buf, v8::Isolate *isolate, const uint8_t *value, v8::NewStringType type, int length)
+    void v8cxx__string_new_from_onebyte(v8::MaybeLocal<v8::String> *maybe_local_buf, v8::Isolate *isolate, const uint8_t *value, v8::NewStringType type, int length)
     {
-        new (local_buf) v8::Local<v8::String>(v8::String::NewFromOneByte(isolate, value, type, length).ToLocalChecked());
+        new (maybe_local_buf) v8::MaybeLocal<v8::String>(v8::String::NewFromOneByte(isolate, value, type, length));
     }
 
-    void v8cxx__string_new_from_twobyte(v8::Local<v8::String> *local_buf, v8::Isolate *isolate, const uint16_t *value, v8::NewStringType type, int length)
+    void v8cxx__string_new_from_twobyte(v8::MaybeLocal<v8::String> *maybe_local_buf, v8::Isolate *isolate, const uint16_t *value, v8::NewStringType type, int length)
     {
-        new (local_buf) v8::Local<v8::String>(v8::String::NewFromTwoByte(isolate, value, type, length).ToLocalChecked());
+        new (maybe_local_buf) v8::MaybeLocal<v8::String>(v8::String::NewFromTwoByte(isolate, value, type, length));
     }
 
     int v8cxx__string_length(const v8::String &string)
