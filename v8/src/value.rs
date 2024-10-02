@@ -97,7 +97,7 @@ extern "C" {
         context: *const Local<Context>,
     );
     fn v8cxx__value_to_boolean(
-        maybe_local_buf: *mut MaybeLocal<Boolean>,
+        local_buf: *mut Local<Boolean>,
         value: *const Value,
         context: *const Local<Context>,
     );
@@ -426,8 +426,8 @@ pub mod traits {
             maybe_local_object
         }
 
-        fn to_boolean(&self, context: &Local<Context>) -> MaybeLocal<Boolean> {
-            let mut local_boolean = MaybeLocal::<Boolean>::empty();
+        fn to_boolean(&self, context: &Local<Context>) -> Local<Boolean> {
+            let mut local_boolean = Local::<Boolean>::empty();
 
             unsafe {
                 v8cxx__value_to_boolean(
