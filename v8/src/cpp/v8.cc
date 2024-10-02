@@ -871,3 +871,17 @@ extern "C"
         new (local_buf) v8::Local<v8::Value>(object->Get(*context, index).ToLocalChecked());
     }
 }
+
+// v8::FixedArray
+extern "C"
+{
+    int v8cxx__fixed_array_length(const v8::FixedArray *fixed_array)
+    {
+        return fixed_array->Length();
+    }
+
+    void v8cxx__fixed_array_get(v8::Local<v8::Data> *local_buf, const v8::FixedArray *fixed_array, const v8::Local<v8::Context> *context, int i)
+    {
+        new (local_buf) v8::Local<v8::Data>(fixed_array->Get(*context, i));
+    }
+}
