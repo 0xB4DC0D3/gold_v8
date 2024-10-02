@@ -885,3 +885,56 @@ extern "C"
         new (local_buf) v8::Local<v8::Data>(fixed_array->Get(*context, i));
     }
 }
+
+// v8::Module
+extern "C"
+{
+    v8::Module::Status v8cxx__module_get_status(const v8::Module *module)
+    {
+        return module->GetStatus();
+    }
+
+    void v8cxx__module_get_exception(v8::Local<v8::Value> *local_buf, const v8::Module *module)
+    {
+        new (local_buf) v8::Local<v8::Value>(module->GetException());
+    }
+
+    void v8cxx__module_get_module_requests(v8::Local<v8::FixedArray> *local_buf, const v8::Module *module)
+    {
+        new (local_buf) v8::Local<v8::FixedArray>(module->GetModuleRequests());
+    }
+
+    v8::Location v8cxx__module_source_offset_to_location(const v8::Module *module, int offset)
+    {
+        return module->SourceOffsetToLocation(offset);
+    }
+
+    int v8cxx__module_get_identity_hash(const v8::Module *module)
+    {
+        return module->GetIdentityHash();
+    }
+}
+
+// v8::MaybeLocal
+extern "C"
+{
+    bool v8cxx__maybe_local_is_empty(const v8::MaybeLocal<v8::Data> *maybe_local)
+    {
+        return maybe_local->IsEmpty();
+    }
+
+    bool v8cxx__maybe_local_to_local(const v8::MaybeLocal<v8::Data> *maybe_local, v8::Local<v8::Data> *out)
+    {
+        return maybe_local->ToLocal(out);
+    }
+
+    void v8cxx__maybe_local_to_local_checked(v8::Local<v8::Data> *local_buf, v8::MaybeLocal<v8::Data> *maybe_local)
+    {
+        new (local_buf) v8::Local<v8::Data>(maybe_local->ToLocalChecked());
+    }
+
+    void v8cxx__maybe_local_from_maybe(v8::Local<v8::Data> *local_buf, const v8::MaybeLocal<v8::Data> *maybe_local, const v8::Local<v8::Data> *default_value)
+    {
+        new (local_buf) v8::Local<v8::Data>(maybe_local->FromMaybe(*default_value));
+    }
+}
