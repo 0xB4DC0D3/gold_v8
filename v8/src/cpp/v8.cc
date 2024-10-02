@@ -742,14 +742,14 @@ extern "C"
 // v8::Script
 extern "C"
 {
-    void v8cxx__script_compile(v8::Local<v8::Script> *local_buf, const v8::Local<v8::Context> *context, const v8::Local<v8::String> *source)
+    void v8cxx__script_compile(v8::MaybeLocal<v8::Script> *maybe_local_buf, const v8::Local<v8::Context> *context, const v8::Local<v8::String> *source)
     {
-        new (local_buf) v8::Local<v8::Script>(v8::Script::Compile(*context, *source).ToLocalChecked());
+        new (maybe_local_buf) v8::MaybeLocal<v8::Script>(v8::Script::Compile(*context, *source));
     }
 
-    void v8cxx__script_run(v8::Local<v8::Value> *local_buf, v8::Script *script, const v8::Local<v8::Context> *context)
+    void v8cxx__script_run(v8::MaybeLocal<v8::Value> *maybe_local_buf, v8::Script *script, const v8::Local<v8::Context> *context)
     {
-        new (local_buf) v8::Local<v8::Value>(script->Run(*context).ToLocalChecked());
+        new (maybe_local_buf) v8::MaybeLocal<v8::Value>(script->Run(*context));
     }
 }
 

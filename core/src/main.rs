@@ -21,11 +21,12 @@ fn main() {
         let context = v8::context::Context::new(&handle_scope, None);
         let context_scope = v8::scope::ContextScope::new(context);
 
-        let source = v8::string::String::new(&handle_scope, r#""hello, " + "world""#).to_local_checked();
+        let source =
+            v8::string::String::new(&handle_scope, r#""hello, " + "world""#).to_local_checked();
 
-        let mut script = v8::script::Script::compile(&context_scope, &source);
+        let mut script = v8::script::Script::compile(&context_scope, &source).to_local_checked();
 
-        let result = script.run(&context_scope);
+        let result = script.run(&context_scope).to_local_checked();
 
         println!(
             "result = {}",
