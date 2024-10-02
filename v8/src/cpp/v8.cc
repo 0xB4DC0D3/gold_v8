@@ -840,22 +840,22 @@ extern "C"
     // TODO: v8cxx__object_define_property
 
     void v8cxx__object_get(
-        v8::MaybeLocal<v8::Value> *local_buf,
+        v8::MaybeLocal<v8::Value> *maybe_local_buf,
         v8::Object *object,
         const v8::Local<v8::Context> *context,
         const v8::Local<v8::Value> *key,
         const v8::MaybeLocal<v8::Object> *receiver)
     {
-        new (local_buf) v8::MaybeLocal<v8::Value>(object->Get(*context, *key, *receiver));
+        new (maybe_local_buf) v8::MaybeLocal<v8::Value>(object->Get(*context, *key, *receiver));
     }
 
     void v8cxx__object_get_indexed(
-        v8::MaybeLocal<v8::Value> *local_buf,
+        v8::MaybeLocal<v8::Value> *maybe_local_buf,
         v8::Object *object,
         const v8::Local<v8::Context> *context,
         uint32_t index)
     {
-        new (local_buf) v8::MaybeLocal<v8::Value>(object->Get(*context, index));
+        new (maybe_local_buf) v8::MaybeLocal<v8::Value>(object->Get(*context, index));
     }
 }
 
