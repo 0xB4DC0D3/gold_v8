@@ -18,7 +18,7 @@ pub mod traits {
         v8cxx__data_is_value,
     };
 
-    pub trait Data {
+    pub trait Data: Sized {
         fn is_context(&self) -> bool {
             unsafe { v8cxx__data_is_context(self as *const _ as *const _) }
         }

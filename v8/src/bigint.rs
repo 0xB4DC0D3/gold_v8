@@ -12,7 +12,7 @@ pub struct BigInt([u8; 0]);
 
 impl BigInt {
     #[inline(always)]
-    pub fn new(handle_scope: &mut HandleScope, value: i64) -> Local<Self> {
+    pub fn new(handle_scope: &HandleScope, value: i64) -> Local<Self> {
         let mut local_bigint = Local::<Self>::empty();
 
         unsafe {

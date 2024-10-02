@@ -75,9 +75,9 @@ extern "C"
         return v8::Isolate::New(create_params);
     }
 
-    v8::Isolate *v8cxx__isolate_get_current(v8::Isolate *isolate)
+    v8::Isolate *v8cxx__isolate_get_current()
     {
-        return isolate->GetCurrent();
+        return v8::Isolate::GetCurrent();
     }
 
     void v8cxx__isolate_get_current_context(v8::Local<v8::Context> *local_buf, v8::Isolate *isolate)
@@ -105,7 +105,7 @@ extern "C"
         HandleScope(v8::Isolate *isolate) : handle_scope(isolate) {}
         ~HandleScope() {}
 
-        v8::HandleScope &get()
+        const v8::HandleScope &get() const
         {
             return this->handle_scope;
         }
@@ -114,17 +114,17 @@ extern "C"
         v8::HandleScope handle_scope;
     };
 
-    HandleScope *v8cxx__handlescope_new(v8::Isolate *isolate)
+    void v8cxx__handlescope_new(HandleScope *buf, v8::Isolate *isolate)
     {
-        return new HandleScope(isolate);
+        new (buf) HandleScope(isolate);
     }
 
     void v8cxx__handlescope_drop(HandleScope *handle_scope)
     {
-        delete handle_scope;
+        handle_scope->~HandleScope();
     }
 
-    v8::Isolate *v8cxx__handlescope_get_isolate(HandleScope *handle_scope)
+    v8::Isolate *v8cxx__handlescope_get_isolate(const HandleScope *handle_scope)
     {
         return handle_scope->get().GetIsolate();
     }

@@ -38,7 +38,7 @@ pub struct Symbol([u8; 0]);
 
 impl Symbol {
     #[inline(always)]
-    pub fn new(handle_scope: &mut HandleScope, name: &Local<String>) -> Local<Self> {
+    pub fn new(handle_scope: &HandleScope, name: &Local<String>) -> Local<Self> {
         let mut local_symbol = Local::<Self>::empty();
 
         unsafe {
@@ -49,7 +49,7 @@ impl Symbol {
     }
 
     #[inline(always)]
-    pub fn for_symbol(handle_scope: &mut HandleScope, description: &Local<String>) -> Local<Self> {
+    pub fn for_symbol(handle_scope: &HandleScope, description: &Local<String>) -> Local<Self> {
         let mut local_symbol = Local::<Self>::empty();
 
         unsafe {
@@ -65,7 +65,7 @@ impl Symbol {
 
     #[inline(always)]
     pub fn for_api_symbol(
-        handle_scope: &mut HandleScope,
+        handle_scope: &HandleScope,
         description: &Local<String>,
     ) -> Local<Self> {
         let mut local_symbol = Local::<Self>::empty();
@@ -82,7 +82,7 @@ impl Symbol {
     }
 
     #[inline(always)]
-    pub fn get_async_iterator(handle_scope: &mut HandleScope) -> Local<Self> {
+    pub fn get_async_iterator(handle_scope: &HandleScope) -> Local<Self> {
         let mut local_symbol = Local::<Self>::empty();
 
         unsafe {
@@ -96,7 +96,7 @@ impl Symbol {
     }
 
     #[inline(always)]
-    pub fn get_has_instance(handle_scope: &mut HandleScope) -> Local<Self> {
+    pub fn get_has_instance(handle_scope: &HandleScope) -> Local<Self> {
         let mut local_symbol = Local::<Self>::empty();
 
         unsafe {
@@ -107,7 +107,7 @@ impl Symbol {
     }
 
     #[inline(always)]
-    pub fn get_is_concat_spreadable(handle_scope: &mut HandleScope) -> Local<Self> {
+    pub fn get_is_concat_spreadable(handle_scope: &HandleScope) -> Local<Self> {
         let mut local_symbol = Local::<Self>::empty();
 
         unsafe {
@@ -121,7 +121,7 @@ impl Symbol {
     }
 
     #[inline(always)]
-    pub fn get_iterator(handle_scope: &mut HandleScope) -> Local<Self> {
+    pub fn get_iterator(handle_scope: &HandleScope) -> Local<Self> {
         let mut local_symbol = Local::<Self>::empty();
 
         unsafe {
@@ -132,7 +132,7 @@ impl Symbol {
     }
 
     #[inline(always)]
-    pub fn get_match(handle_scope: &mut HandleScope) -> Local<Self> {
+    pub fn get_match(handle_scope: &HandleScope) -> Local<Self> {
         let mut local_symbol = Local::<Self>::empty();
 
         unsafe {
@@ -143,7 +143,7 @@ impl Symbol {
     }
 
     #[inline(always)]
-    pub fn get_replace(handle_scope: &mut HandleScope) -> Local<Self> {
+    pub fn get_replace(handle_scope: &HandleScope) -> Local<Self> {
         let mut local_symbol = Local::<Self>::empty();
 
         unsafe {
@@ -154,7 +154,7 @@ impl Symbol {
     }
 
     #[inline(always)]
-    pub fn get_search(handle_scope: &mut HandleScope) -> Local<Self> {
+    pub fn get_search(handle_scope: &HandleScope) -> Local<Self> {
         let mut local_symbol = Local::<Self>::empty();
 
         unsafe {
@@ -165,7 +165,7 @@ impl Symbol {
     }
 
     #[inline(always)]
-    pub fn get_split(handle_scope: &mut HandleScope) -> Local<Self> {
+    pub fn get_split(handle_scope: &HandleScope) -> Local<Self> {
         let mut local_symbol = Local::<Self>::empty();
 
         unsafe {
@@ -176,7 +176,7 @@ impl Symbol {
     }
 
     #[inline(always)]
-    pub fn get_to_primitive(handle_scope: &mut HandleScope) -> Local<Self> {
+    pub fn get_to_primitive(handle_scope: &HandleScope) -> Local<Self> {
         let mut local_symbol = Local::<Self>::empty();
 
         unsafe {
@@ -187,7 +187,7 @@ impl Symbol {
     }
 
     #[inline(always)]
-    pub fn get_to_string_tag(handle_scope: &mut HandleScope) -> Local<Self> {
+    pub fn get_to_string_tag(handle_scope: &HandleScope) -> Local<Self> {
         let mut local_symbol = Local::<Self>::empty();
 
         unsafe {
@@ -198,7 +198,7 @@ impl Symbol {
     }
 
     #[inline(always)]
-    pub fn get_unscopables(handle_scope: &mut HandleScope) -> Local<Self> {
+    pub fn get_unscopables(handle_scope: &HandleScope) -> Local<Self> {
         let mut local_symbol = Local::<Self>::empty();
 
         unsafe {

@@ -13,7 +13,7 @@ pub struct Boolean([u8; 0]);
 
 impl Boolean {
     #[inline(always)]
-    pub fn new(handle_scope: &mut HandleScope, value: bool) -> Local<Self> {
+    pub fn new(handle_scope: &HandleScope, value: bool) -> Local<Self> {
         let mut local_boolean = Local::<Self>::empty();
 
         unsafe {
