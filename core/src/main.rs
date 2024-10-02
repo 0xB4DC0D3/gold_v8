@@ -29,7 +29,10 @@ fn main() {
 
         println!(
             "result = {}",
-            result.to_string(&context_scope).as_str(&handle_scope)
+            result
+                .to_string(&context_scope)
+                .to_local_checked()
+                .as_str(&handle_scope)
         );
 
         let mut test = v8::object::Object::new(&handle_scope);
