@@ -929,7 +929,7 @@ void v8cxx__module_request_get_specifier(
 
 v8::ModuleImportPhase v8cxx__module_request_get_phase(
     const v8::ModuleRequest* module_request) {
-  module_request->GetPhase();
+  return module_request->GetPhase();
 }
 
 void v8cxx__module_request_get_import_attributes(
