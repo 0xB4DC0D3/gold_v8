@@ -944,3 +944,32 @@ int v8cxx__module_request_get_source_offset(
   return module_request->GetSourceOffset();
 }
 }
+
+// v8::PrimitiveArray
+extern "C" {
+void v8cxx__primitive_array_new(v8::Local<v8::PrimitiveArray>* local_buf,
+                                v8::Isolate* isolate,
+                                int length) {
+  new (local_buf)
+      v8::Local<v8::PrimitiveArray>(v8::PrimitiveArray::New(isolate, length));
+}
+
+int v8cxx__primitive_array_length(const v8::PrimitiveArray* primitive_array) {
+  return primitive_array->Length();
+}
+
+void v8cxx__primitive_array_set(v8::PrimitiveArray* primitive_array,
+                                v8::Isolate* isolate,
+                                int index,
+                                const v8::Local<v8::Primitive>* item) {
+  primitive_array->Set(isolate, index, *item);
+}
+
+void v8cxx__primitive_array_get(v8::Local<v8::Primitive>* local_buf,
+                                v8::PrimitiveArray* primitive_array,
+                                v8::Isolate* isolate,
+                                int index) {
+  new (local_buf)
+      v8::Local<v8::Primitive>(primitive_array->Get(isolate, index));
+}
+}

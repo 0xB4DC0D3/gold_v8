@@ -23,6 +23,7 @@ pub mod object;
 pub mod object_template;
 pub mod platform;
 pub mod primitive;
+pub mod primitive_array;
 pub mod scope;
 pub mod script;
 pub mod string;
