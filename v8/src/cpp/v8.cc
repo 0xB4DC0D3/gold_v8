@@ -918,3 +918,29 @@ void v8cxx__maybe_local_from_maybe(v8::Local<v8::Data>* local_buf,
   new (local_buf) v8::Local<v8::Data>(maybe_local->FromMaybe(*default_value));
 }
 }
+
+// v8::ModuleRequest
+extern "C" {
+void v8cxx__module_request_get_specifier(
+    v8::Local<v8::String>* local_buf,
+    const v8::ModuleRequest* module_request) {
+  new (local_buf) v8::Local<v8::String>(module_request->GetSpecifier());
+}
+
+v8::ModuleImportPhase v8cxx__module_request_get_phase(
+    const v8::ModuleRequest* module_request) {
+  module_request->GetPhase();
+}
+
+void v8cxx__module_request_get_import_attributes(
+    v8::Local<v8::FixedArray>* local_buf,
+    const v8::ModuleRequest* module_request) {
+  new (local_buf)
+      v8::Local<v8::FixedArray>(module_request->GetImportAttributes());
+}
+
+int v8cxx__module_request_get_source_offset(
+    const v8::ModuleRequest* module_request) {
+  return module_request->GetSourceOffset();
+}
+}
