@@ -15,6 +15,7 @@ pub mod isolate;
 pub mod local;
 pub mod microtask_queue;
 pub mod module;
+pub mod module_request;
 pub mod name;
 pub mod number;
 pub mod numeric;
