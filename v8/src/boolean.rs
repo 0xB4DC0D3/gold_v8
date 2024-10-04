@@ -1,6 +1,6 @@
 use crate::{
     data::traits::Data, isolate::Isolate, local::Local, primitive::traits::Primitive,
-    scope::HandleScope, value::traits::Value,
+    value::traits::Value,
 };
 
 extern "C" {
@@ -13,15 +13,11 @@ pub struct Boolean([u8; 0]);
 
 impl Boolean {
     #[inline(always)]
-    pub fn new(handle_scope: &HandleScope, value: bool) -> Local<Self> {
+    pub fn new(isolate: &mut Isolate, value: bool) -> Local<Self> {
         let mut local_boolean = Local::<Self>::empty();
 
         unsafe {
-            v8cxx__boolean_new(
-                &mut local_boolean,
-                handle_scope.get_isolate().unwrap(),
-                value,
-            );
+            v8cxx__boolean_new(&mut local_boolean, isolate, value);
         }
 
         local_boolean

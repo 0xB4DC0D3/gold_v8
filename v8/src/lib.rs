@@ -29,6 +29,8 @@ pub mod symbol;
 pub mod v8;
 pub mod value;
 
+pub(crate) mod c_support;
+
 pub fn get_version() -> String {
     format!(
         "{}.{}.{}",

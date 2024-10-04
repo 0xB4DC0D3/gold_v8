@@ -1,8 +1,11 @@
 use core::str;
 
 use crate::{
-    data::traits::Data, isolate::Isolate, local::{Local, MaybeLocal}, primitive::traits::Primitive,
-    scope::HandleScope, value::traits::Value,
+    data::traits::Data,
+    isolate::Isolate,
+    local::{Local, MaybeLocal},
+    primitive::traits::Primitive,
+    value::traits::Value,
 };
 
 extern "C" {
@@ -57,13 +60,13 @@ pub struct String([u8; 0]);
 
 impl String {
     #[inline(always)]
-    pub fn new(handle_scope: &HandleScope, value: &str) -> MaybeLocal<Self> {
-        Self::new_from_utf8(handle_scope, value, NewStringType::Normal)
+    pub fn new(isolate: &mut Isolate, value: &str) -> MaybeLocal<Self> {
+        Self::new_from_utf8(isolate, value, NewStringType::Normal)
     }
 
     #[inline(always)]
     pub fn new_from_utf8(
-        handle_scope: &HandleScope,
+        isolate: &mut Isolate,
         value: &str,
         string_type: NewStringType,
     ) -> MaybeLocal<Self> {
@@ -72,7 +75,7 @@ impl String {
         unsafe {
             v8cxx__string_new_from_utf8(
                 &mut maybe_local_string,
-                handle_scope.get_isolate().unwrap(),
+                isolate,
                 value.as_ptr(),
                 string_type,
                 value.len() as i32,
@@ -84,7 +87,7 @@ impl String {
 
     #[inline(always)]
     pub fn new_from_onebyte(
-        handle_scope: &HandleScope,
+        isolate: &mut Isolate,
         value: &[u8],
         string_type: NewStringType,
     ) -> MaybeLocal<Self> {
@@ -93,7 +96,7 @@ impl String {
         unsafe {
             v8cxx__string_new_from_onebyte(
                 &mut maybe_local_string,
-                handle_scope.get_isolate().unwrap(),
+                isolate,
                 value.as_ptr(),
                 string_type,
                 value.len() as i32,
@@ -105,7 +108,7 @@ impl String {
 
     #[inline(always)]
     pub fn new_from_twobyte(
-        handle_scope: &HandleScope,
+        isolate: &mut Isolate,
         value: &[u16],
         string_type: NewStringType,
     ) -> MaybeLocal<Self> {
@@ -114,7 +117,7 @@ impl String {
         unsafe {
             v8cxx__string_new_from_twobyte(
                 &mut maybe_local_string,
-                handle_scope.get_isolate().unwrap(),
+                isolate,
                 value.as_ptr(),
                 string_type,
                 value.len() as i32,
@@ -171,10 +174,10 @@ impl String {
     }
 
     #[inline(always)]
-    pub fn as_str(&self, handle_scope: &HandleScope) -> &str {
+    pub fn as_str(&self, isolate: &mut Isolate) -> &str {
         unsafe {
             let length = self.length() as usize;
-            let str_buffer = v8cxx__string_view(self, handle_scope.get_isolate().unwrap());
+            let str_buffer = v8cxx__string_view(self, isolate);
 
             std::str::from_utf8(std::slice::from_raw_parts(str_buffer, length)).unwrap()
         }

@@ -1,3 +1,8 @@
+use std::{
+    ops::{Deref, DerefMut},
+    ptr::NonNull,
+};
+
 use crate::{array_buffer::ArrayBufferAllocator, bindings, context::Context, local::Local};
 
 extern "C" {
@@ -27,22 +32,17 @@ pub struct Isolate([u8; 0]);
 
 impl Isolate {
     #[inline(always)]
-    pub fn new(create_params: &IsolateCreateParams) -> Option<&mut Self> {
-        unsafe {
-            let mut isolate = v8cxx__isolate_new(create_params).as_mut();
-
-            isolate.as_mut().unwrap().enter();
-            isolate
-        }
+    pub fn new(create_params: &IsolateCreateParams) -> OwnedIsolate {
+        unsafe { OwnedIsolate::new(v8cxx__isolate_new(create_params)) }
     }
 
     #[inline(always)]
-    fn enter(&mut self) {
+    pub(super) fn enter(&mut self) {
         unsafe { v8cxx__isolate_enter(self) };
     }
 
     #[inline(always)]
-    fn exit(&mut self) {
+    pub(super) fn exit(&mut self) {
         unsafe { v8cxx__isolate_exit(self) };
     }
 
@@ -61,9 +61,38 @@ impl Isolate {
     }
 }
 
-impl Drop for Isolate {
+pub struct OwnedIsolate(NonNull<Isolate>);
+
+impl OwnedIsolate {
+    pub fn new(isolate: *mut Isolate) -> Self {
+        let mut owned_isolate = Self(NonNull::new(isolate).unwrap());
+
+        owned_isolate.enter();
+        owned_isolate
+    }
+}
+
+impl Deref for OwnedIsolate {
+    type Target = Isolate;
+    fn deref(&self) -> &Self::Target {
+        unsafe { self.0.as_ref() }
+    }
+}
+
+impl DerefMut for OwnedIsolate {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        unsafe { self.0.as_mut() }
+    }
+}
+
+impl AsMut<Isolate> for OwnedIsolate {
+    fn as_mut(&mut self) -> &mut Isolate {
+        self
+    }
+}
+
+impl Drop for OwnedIsolate {
     fn drop(&mut self) {
-        println!("Isolate::drop");
         self.exit();
     }
 }

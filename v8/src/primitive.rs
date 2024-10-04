@@ -1,6 +1,4 @@
-use crate::{
-    data::traits::Data, isolate::Isolate, local::Local, scope::HandleScope, value::traits::Value,
-};
+use crate::{data::traits::Data, isolate::Isolate, local::Local, value::traits::Value};
 
 extern "C" {
     fn v8cxx__primitive_undefined(local_buf: *mut Local<Primitive>, isolate: *mut Isolate);
@@ -12,21 +10,19 @@ pub struct Primitive([u8; 0]);
 
 impl Primitive {
     #[inline(always)]
-    pub fn undefined(handle_scope: &HandleScope) -> Local<Self> {
+    pub fn undefined(isolate: &mut Isolate) -> Local<Self> {
         let mut local_primitive = Local::<Self>::empty();
 
-        unsafe {
-            v8cxx__primitive_undefined(&mut local_primitive, handle_scope.get_isolate().unwrap())
-        };
+        unsafe { v8cxx__primitive_undefined(&mut local_primitive, isolate) };
 
         local_primitive
     }
 
     #[inline(always)]
-    pub fn null(handle_scope: &HandleScope) -> Local<Self> {
+    pub fn null(isolate: &mut Isolate) -> Local<Self> {
         let mut local_primitive = Local::<Self>::empty();
 
-        unsafe { v8cxx__primitive_null(&mut local_primitive, handle_scope.get_isolate().unwrap()) };
+        unsafe { v8cxx__primitive_null(&mut local_primitive, isolate) };
 
         local_primitive
     }
