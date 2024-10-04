@@ -134,3 +134,9 @@ impl<T: Data> MaybeLocal<T> {
         local_data
     }
 }
+
+impl<T: Data> From<Local<T>> for MaybeLocal<T> {
+    fn from(value: Local<T>) -> Self {
+        Self(value)
+    }
+}

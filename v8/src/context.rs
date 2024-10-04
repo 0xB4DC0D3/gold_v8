@@ -1,6 +1,6 @@
 use crate::{
     data::traits::Data, isolate::Isolate, local::Local, microtask_queue::MicrotaskQueue,
-    object::Object, object_template::ObjectTemplate, scope::HandleScope, value::Value,
+    object::Object, object_template::ObjectTemplate, value::Value,
 };
 
 extern "C" {
@@ -20,36 +20,18 @@ extern "C" {
     fn v8cxx__context_set_microtask_queue(this: *mut Context, microtask_queue: *mut MicrotaskQueue);
 }
 
-// TODO: implement MicrotaskQueue
-#[allow(dead_code)]
-pub struct ContextOptions {
-    global_template: Local<ObjectTemplate>,
-    global_object: Local<Value>,
-    microtask_queue: Option<MicrotaskQueue>,
-}
-
-impl ContextOptions {
-    pub fn new(global_template: Local<ObjectTemplate>, global_object: Local<Value>) -> Self {
-        Self {
-            global_template,
-            global_object,
-            microtask_queue: None,
-        }
-    }
-}
-
 #[repr(C)]
 pub struct Context([u8; 0]);
 
 impl Context {
     #[inline(always)]
-    pub fn new(handle_scope: &HandleScope, options: Option<ContextOptions>) -> Local<Self> {
+    pub fn new(isolate: &mut Isolate, options: Option<ContextOptions>) -> Local<Self> {
         let mut local_context = Local::<Self>::empty();
 
         unsafe {
             v8cxx__context_new(
                 &mut local_context,
-                handle_scope.get_isolate().unwrap(),
+                isolate,
                 match &options {
                     Some(options) => &options.global_template,
                     None => std::ptr::null::<Local<ObjectTemplate>>(),
@@ -109,3 +91,21 @@ impl Context {
 }
 
 impl Data for Context {}
+
+// TODO: implement MicrotaskQueue
+#[allow(dead_code)]
+pub struct ContextOptions {
+    global_template: Local<ObjectTemplate>,
+    global_object: Local<Value>,
+    microtask_queue: Option<MicrotaskQueue>,
+}
+
+impl ContextOptions {
+    pub fn new(global_template: Local<ObjectTemplate>, global_object: Local<Value>) -> Self {
+        Self {
+            global_template,
+            global_object,
+            microtask_queue: None,
+        }
+    }
+}

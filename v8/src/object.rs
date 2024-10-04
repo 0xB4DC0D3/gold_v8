@@ -4,7 +4,6 @@ use crate::{
     isolate::Isolate,
     local::{Local, MaybeLocal},
     name::Name,
-    scope::HandleScope,
     value::{self, Value},
 };
 
@@ -71,11 +70,11 @@ pub struct Object([u8; 0]);
 
 impl Object {
     #[inline(always)]
-    pub fn new(handle_scope: &HandleScope) -> Local<Self> {
+    pub fn new(isolate: &mut Isolate) -> Local<Self> {
         let mut local_object = Local::<Self>::empty();
 
         unsafe {
-            v8cxx__object_new(&mut local_object, handle_scope.get_isolate().unwrap());
+            v8cxx__object_new(&mut local_object, isolate);
         }
 
         local_object

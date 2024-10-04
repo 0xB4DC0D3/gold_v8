@@ -35,6 +35,19 @@ impl Drop for HandleScope {
     }
 }
 
+impl Deref for HandleScope {
+    type Target = Isolate;
+    fn deref(&self) -> &Self::Target {
+        self.get_isolate().expect("Can't get `Isolate` from `HandleScope`")
+    }
+}
+
+impl DerefMut for HandleScope {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        self.get_isolate().expect("Can't get mutable `Isolate` from `HandleScope`")
+    }
+}
+
 pub struct ContextScope(Local<Context>);
 
 impl ContextScope {
