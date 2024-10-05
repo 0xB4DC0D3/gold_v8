@@ -27,8 +27,10 @@ pub mod primitive_array;
 pub mod private;
 pub mod scope;
 pub mod script;
+pub mod signature;
 pub mod string;
 pub mod symbol;
+pub mod template;
 pub mod v8;
 pub mod value;
 

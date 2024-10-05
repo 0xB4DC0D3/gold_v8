@@ -1012,3 +1012,54 @@ void v8cxx__(v8::Local<v8::Private>* local_buf,
   new (local_buf) v8::Local<v8::Private>(v8::Private::ForApi(isolate, *name));
 }
 }
+
+// v8::Signature
+extern "C" {
+void v8cxx__signature_new(v8::Local<v8::Signature>* local_buf,
+                          v8::Isolate* isolate,
+                          const v8::Local<v8::FunctionTemplate>* receiver) {
+  new (local_buf)
+      v8::Local<v8::Signature>(v8::Signature::New(isolate, *receiver));
+}
+}
+
+// v8::Template
+extern "C" {
+void v8cxx__template_set(v8::Template* template_,
+                         const v8::Local<v8::Name>* name,
+                         const v8::Local<v8::Data>* value,
+                         v8::PropertyAttribute attributes) {
+  template_->Set(*name, *value, attributes);
+}
+
+void v8cxx__template_set_private(v8::Template* template_,
+                                 const v8::Local<v8::Name>* name,
+                                 const v8::Local<v8::Data>* value,
+                                 v8::PropertyAttribute attributes) {
+  template_->SetPrivate(*name, *value, attributes);
+}
+
+void v8cxx__template_set_with_isolate(v8::Template* template_,
+                                  v8::Isolate* isolate,
+                                  const char* name,
+                                  const v8::Local<v8::Data>* value,
+                                  v8::PropertyAttribute attributes) {
+  template_->Set(isolate, name, *value, attributes);
+}
+
+void v8cxx__template_set_accessor_property(
+    v8::Template* template_,
+    const v8::Local<v8::Name>* name,
+    const v8::Local<v8::FunctionTemplate>* getter,
+    const v8::Local<v8::FunctionTemplate>* setter,
+    v8::PropertyAttribute attribute) {
+  template_->SetAccessorProperty(*name, *getter, *setter, attribute);
+}
+}
+
+// v8::FunctionTemplate 
+extern "C" {
+  void v8cxx__function_template_new(v8::FunctionTemplate* fn_template) {
+
+  }
+}
