@@ -973,3 +973,23 @@ void v8cxx__primitive_array_get(v8::Local<v8::Primitive>* local_buf,
       v8::Local<v8::Primitive>(primitive_array->Get(isolate, index));
 }
 }
+
+// v8::Private
+extern "C" {
+void v8cxx__private_name(v8::Local<v8::Value>* local_buf,
+                         const v8::Private* private_) {
+  new (local_buf) v8::Local<v8::Value>(private_->Name());
+}
+
+void v8cxx__private_new(v8::Local<v8::Private>* local_buf,
+                        v8::Isolate* isolate,
+                        const v8::Local<v8::String>* name) {
+  new (local_buf) v8::Local<v8::Private>(v8::Private::New(isolate, *name));
+}
+
+void v8cxx__(v8::Local<v8::Private>* local_buf,
+             v8::Isolate* isolate,
+             const v8::Local<v8::String>* name) {
+  new (local_buf) v8::Local<v8::Private>(v8::Private::ForApi(isolate, *name));
+}
+}
