@@ -1,4 +1,10 @@
-use crate::{context::Context, data::traits::Data, local::{Local, MaybeLocal}, string::String, value::Value};
+use crate::{
+    context::Context,
+    data::traits::Data,
+    local::{Local, MaybeLocal},
+    string::String,
+    value::Value,
+};
 
 extern "C" {
     fn v8cxx__script_compile(
@@ -12,6 +18,8 @@ extern "C" {
         script: *mut Script,
         context: *const Local<Context>,
     );
+
+    fn v8cxx__script_get_resource_name(local_buf: *mut Local<Value>, script: *mut Script);
 }
 
 #[repr(C)]
@@ -20,7 +28,7 @@ pub struct Script([u8; 0]);
 impl Script {
     #[inline(always)]
     pub fn compile(context: &Local<Context>, source: &Local<String>) -> MaybeLocal<Self> {
-        let mut maybe_local_script = MaybeLocal::<Self>::empty();
+        let mut maybe_local_script = MaybeLocal::empty();
 
         unsafe { v8cxx__script_compile(&mut maybe_local_script, context, source) };
 
@@ -36,6 +44,15 @@ impl Script {
         }
 
         maybe_local_value
+    }
+
+    #[inline(always)]
+    pub fn get_resource_name(&mut self) -> Local<Value> {
+        let mut local_value = Local::empty();
+
+        unsafe { v8cxx__script_get_resource_name(&mut local_value, self) };
+
+        local_value
     }
 }
 
