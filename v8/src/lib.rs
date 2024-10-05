@@ -24,6 +24,7 @@ pub mod object_template;
 pub mod platform;
 pub mod primitive;
 pub mod primitive_array;
+pub mod private;
 pub mod scope;
 pub mod script;
 pub mod string;
