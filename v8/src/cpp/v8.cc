@@ -673,6 +673,25 @@ void v8cxx__script_run(v8::MaybeLocal<v8::Value>* maybe_local_buf,
                        const v8::Local<v8::Context>* context) {
   new (maybe_local_buf) v8::MaybeLocal<v8::Value>(script->Run(*context));
 }
+
+// TODO: add this to v8::script::Script (Rust)
+void v8cxx__script_get_unbound_script(v8::Local<v8::UnboundScript>* local_buf,
+                                      v8::Script* script) {
+  new (local_buf) v8::Local<v8::UnboundScript>(script->GetUnboundScript());
+}
+
+void v8cxx__script_get_resource_name(v8::Local<v8::Value>* local_buf,
+                                     v8::Script* script) {
+  new (local_buf) v8::Local<v8::Value>(script->GetResourceName());
+}
+
+// TODO: add this to v8::script::Script (Rust)
+void v8cxx__script_get_compile_hints_collector(
+    v8::Local<v8::CompileHintsCollector>* local_buf,
+    const v8::Script* script) {
+  new (local_buf)
+      v8::Local<v8::CompileHintsCollector>(script->GetCompileHintsCollector());
+}
 }
 
 // v8::Name
