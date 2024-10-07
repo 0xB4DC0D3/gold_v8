@@ -1012,3 +1012,572 @@ void v8cxx__(v8::Local<v8::Private>* local_buf,
   new (local_buf) v8::Local<v8::Private>(v8::Private::ForApi(isolate, *name));
 }
 }
+
+// v8::Signature
+extern "C" {
+void v8cxx__signature_new(v8::Local<v8::Signature>* local_buf,
+                          v8::Isolate* isolate,
+                          const v8::Local<v8::FunctionTemplate>* receiver) {
+  new (local_buf)
+      v8::Local<v8::Signature>(v8::Signature::New(isolate, *receiver));
+}
+}
+
+// v8::Template
+extern "C" {
+void v8cxx__template_set(v8::Template* template_,
+                         const v8::Local<v8::Name>* name,
+                         const v8::Local<v8::Data>* value,
+                         v8::PropertyAttribute attributes) {
+  template_->Set(*name, *value, attributes);
+}
+
+void v8cxx__template_set_private(v8::Template* template_,
+                                 const v8::Local<v8::Private>* name,
+                                 const v8::Local<v8::Data>* value,
+                                 v8::PropertyAttribute attributes) {
+  template_->SetPrivate(*name, *value, attributes);
+}
+
+void v8cxx__template_set_with_isolate(v8::Template* template_,
+                                      v8::Isolate* isolate,
+                                      const char* name,
+                                      const v8::Local<v8::Data>* value,
+                                      v8::PropertyAttribute attributes) {
+  template_->Set(isolate, name, *value, attributes);
+}
+
+void v8cxx__template_set_accessor_property(
+    v8::Template* template_,
+    const v8::Local<v8::Name>* name,
+    const v8::Local<v8::FunctionTemplate>* getter,
+    const v8::Local<v8::FunctionTemplate>* setter,
+    v8::PropertyAttribute attribute) {
+  template_->SetAccessorProperty(*name, *getter, *setter, attribute);
+}
+}
+
+// v8::FunctionTemplate
+extern "C" {
+void v8cxx__function_template_new(
+    v8::Local<v8::FunctionTemplate>* local_buf,
+    v8::Isolate* isolate,
+    v8::FunctionCallback fn_callback,
+    const v8::Local<v8::Value>* data,
+    const v8::Local<v8::Signature>* signature,
+    int length,
+    v8::ConstructorBehavior behavior,
+    v8::SideEffectType side_effect_type
+    /* TODO: add CFunction and rest of params */) {
+  new (local_buf) v8::Local<v8::FunctionTemplate>(
+      v8::FunctionTemplate::New(isolate, fn_callback, *data, *signature, length,
+                                behavior, side_effect_type));
+}
+
+void v8cxx__function_template_get_function(
+    v8::MaybeLocal<v8::Function>* maybe_local_buf,
+    v8::FunctionTemplate* fn_template,
+    const v8::Local<v8::Context>* context) {
+  new (maybe_local_buf)
+      v8::MaybeLocal<v8::Function>(fn_template->GetFunction(*context));
+}
+
+void v8cxx__function_template_instance_template(
+    v8::Local<v8::ObjectTemplate>* local_buf,
+    v8::FunctionTemplate* fn_template) {
+  new (local_buf)
+      v8::Local<v8::ObjectTemplate>(fn_template->InstanceTemplate());
+}
+
+void v8cxx__function_template_inherit(
+    v8::FunctionTemplate* fn_template,
+    const v8::Local<v8::FunctionTemplate>* parent) {
+  fn_template->Inherit(*parent);
+}
+
+void v8cxx__function_template_prototype_template(
+    v8::Local<v8::ObjectTemplate>* local_buf,
+    v8::FunctionTemplate* fn_template) {
+  new (local_buf)
+      v8::Local<v8::ObjectTemplate>(fn_template->PrototypeTemplate());
+}
+
+void v8cxx__function_template_set_prototype_provider_template(
+    v8::FunctionTemplate* fn_template,
+    const v8::Local<v8::FunctionTemplate>* prototype_provider) {
+  fn_template->SetPrototypeProviderTemplate(*prototype_provider);
+}
+
+void v8cxx__function_template_set_class_name(
+    v8::FunctionTemplate* fn_template,
+    const v8::Local<v8::String>* name) {
+  fn_template->SetClassName(*name);
+}
+
+void v8cxx__function_template_set_interface_name(
+    v8::FunctionTemplate* fn_template,
+    const v8::Local<v8::String>* name) {
+  fn_template->SetInterfaceName(*name);
+}
+
+void v8cxx__function_template_read_only_prototype(
+    v8::FunctionTemplate* fn_template) {
+  fn_template->ReadOnlyPrototype();
+}
+
+void v8cxx__function_template_remove_prototype(
+    v8::FunctionTemplate* fn_template) {
+  fn_template->RemovePrototype();
+}
+
+bool v8cxx__funtion_template_has_instance(v8::FunctionTemplate* fn_template,
+                                          const v8::Local<v8::Value>* object) {
+  return fn_template->HasInstance(*object);
+}
+}
+
+// v8::Function
+extern "C" {
+void v8cxx__function_new(v8::MaybeLocal<v8::Function>* maybe_local_buf,
+                         const v8::Local<v8::Context>* context,
+                         v8::FunctionCallback callback,
+                         const v8::Local<v8::Value>* data,
+                         int length,
+                         v8::ConstructorBehavior behavior,
+                         v8::SideEffectType side_effect_type) {
+  new (maybe_local_buf) v8::MaybeLocal<v8::Function>(v8::Function::New(
+      *context, callback, *data, length, behavior, side_effect_type));
+}
+
+void v8cxx__function_new_instance(v8::MaybeLocal<v8::Object>* maybe_local_buf,
+                                  const v8::Function* function,
+                                  const v8::Local<v8::Context>* context,
+                                  int argc,
+                                  v8::Local<v8::Value>* argv) {
+  new (maybe_local_buf)
+      v8::MaybeLocal<v8::Object>(function->NewInstance(*context, argc, argv));
+}
+
+void v8cxx__function_new_instance_with_side_effect_type(
+    v8::MaybeLocal<v8::Object>* maybe_local_buf,
+    const v8::Function* function,
+    const v8::Local<v8::Context>* context,
+    int argc,
+    v8::Local<v8::Value>* argv,
+    v8::SideEffectType side_effect_type) {
+  new (maybe_local_buf)
+      v8::MaybeLocal<v8::Object>(function->NewInstanceWithSideEffectType(
+          *context, argc, argv, side_effect_type));
+}
+
+void v8cxx__function_set_name(v8::Function* function,
+                              const v8::Local<v8::String>* name) {
+  function->SetName(*name);
+}
+
+void v8cxx__function_get_name(v8::Local<v8::Value>* local_buf,
+                              const v8::Function* function) {
+  new (local_buf) v8::Local<v8::Value>(function->GetName());
+}
+
+void v8cxx__function_get_inferred_name(v8::Local<v8::Value>* local_buf,
+                                       const v8::Function* function) {
+  new (local_buf) v8::Local<v8::Value>(function->GetInferredName());
+}
+
+int v8cxx__function_get_script_line_number(const v8::Function* function) {
+  return function->GetScriptLineNumber();
+}
+
+int v8cxx__function_get_script_column_number(const v8::Function* function) {
+  return function->GetScriptColumnNumber();
+}
+
+int v8cxx__function_script_id(const v8::Function* function) {
+  return function->ScriptId();
+}
+
+void v8cxx__function_get_bound_function(v8::Local<v8::Value>* local_buf,
+                                        const v8::Function* function) {
+  new (local_buf) v8::Local<v8::Value>(function->GetBoundFunction());
+}
+
+void v8cxx__function_function_proto_to_string(
+    v8::MaybeLocal<v8::String>* maybe_local_buf,
+    v8::Function* function,
+    const v8::Local<v8::Context>* context) {
+  new (maybe_local_buf)
+      v8::MaybeLocal<v8::String>(function->FunctionProtoToString(*context));
+}
+
+void v8cxx__function_get_script_origin(v8::ScriptOrigin* buf,
+                                       const v8::Function* function) {
+  new (buf) v8::ScriptOrigin(function->GetScriptOrigin());
+}
+}
+
+// v8::FunctionCallbackInfo<T>
+extern "C" {
+int v8cxx__function_callback_info_length(
+    const v8::FunctionCallbackInfo<v8::Value>* fn_callback_info) {
+  return fn_callback_info->Length();
+}
+
+void v8cxx__function_callback_info_at(
+    v8::Local<v8::Value>* local_buf,
+    const v8::FunctionCallbackInfo<v8::Value>* fn_callback_info,
+    int index) {
+  new (local_buf) v8::Local<v8::Value>((*fn_callback_info)[index]);
+}
+
+void v8cxx__function_callback_info_this(
+    v8::Local<v8::Object>* local_buf,
+    const v8::FunctionCallbackInfo<v8::Value>* fn_callback_info) {
+  new (local_buf) v8::Local<v8::Object>(fn_callback_info->This());
+}
+
+void v8cxx__function_callback_info_new_target(
+    v8::Local<v8::Value>* local_buf,
+    const v8::FunctionCallbackInfo<v8::Value>* fn_callback_info) {
+  new (local_buf) v8::Local<v8::Value>(fn_callback_info->NewTarget());
+}
+
+bool v8cxx__function_callback_info_is_construct_call(
+    const v8::FunctionCallbackInfo<v8::Value>* fn_callback_info) {
+  return fn_callback_info->IsConstructCall();
+}
+
+void v8cxx__function_callback_info_data(
+    v8::Local<v8::Value>* local_buf,
+    const v8::FunctionCallbackInfo<v8::Value>* fn_callback_info) {
+  new (local_buf) v8::Local<v8::Value>(fn_callback_info->Data());
+}
+
+v8::Isolate* v8cxx__function_callback_info_get_isolate(
+    const v8::FunctionCallbackInfo<v8::Value>* fn_callback_info) {
+  return fn_callback_info->GetIsolate();
+}
+
+void v8cxx__function_callback_info_get_return_value(
+    v8::ReturnValue<v8::Value>* buf,
+    const v8::FunctionCallbackInfo<v8::Value>* fn_callback_info) {
+  new (buf) v8::ReturnValue<v8::Value>(fn_callback_info->GetReturnValue());
+}
+}
+
+// v8::ReturnValue<T>
+extern "C" {
+void v8cxx__return_value_set(v8::ReturnValue<v8::Value>* return_value,
+                             const v8::Local<v8::Value>* value) {
+  return_value->Set(*value);
+}
+
+void v8cxx__return_value_set_bool(v8::ReturnValue<v8::Value>* return_value,
+                                  bool value) {
+  return_value->Set(value);
+}
+
+void v8cxx__return_value_set_f64(v8::ReturnValue<v8::Value>* return_value,
+                                 double value) {
+  return_value->Set(value);
+}
+
+void v8cxx__return_value_set_i16(v8::ReturnValue<v8::Value>* return_value,
+                                 int16_t value) {
+  return_value->Set(value);
+}
+
+void v8cxx__return_value_set_i32(v8::ReturnValue<v8::Value>* return_value,
+                                 int32_t value) {
+  return_value->Set(value);
+}
+
+void v8cxx__return_value_set_i64(v8::ReturnValue<v8::Value>* return_value,
+                                 int64_t value) {
+  return_value->Set(value);
+}
+
+void v8cxx__return_value_set_u16(v8::ReturnValue<v8::Value>* return_value,
+                                 uint16_t value) {
+  return_value->Set(value);
+}
+
+void v8cxx__return_value_set_u32(v8::ReturnValue<v8::Value>* return_value,
+                                 uint32_t value) {
+  return_value->Set(value);
+}
+
+void v8cxx__return_value_set_u64(v8::ReturnValue<v8::Value>* return_value,
+                                 uint64_t value) {
+  return_value->Set(value);
+}
+
+void v8cxx__return_value_set_null(v8::ReturnValue<v8::Value>* return_value) {
+  return_value->SetNull();
+}
+
+void v8cxx__return_value_set_undefined(
+    v8::ReturnValue<v8::Value>* return_value) {
+  return_value->SetUndefined();
+}
+
+void v8cxx__return_value_set_false(v8::ReturnValue<v8::Value>* return_value) {
+  return_value->SetFalse();
+}
+
+void v8cxx__return_value_set_empty_string(
+    v8::ReturnValue<v8::Value>* return_value) {
+  return_value->SetEmptyString();
+}
+
+v8::Isolate* v8cxx__return_value_get_isolate(
+    const v8::ReturnValue<v8::Value>* return_value) {
+  return return_value->GetIsolate();
+}
+
+void v8cxx__return_value_get(v8::Local<v8::Value>* local_buf,
+                             const v8::ReturnValue<v8::Value>* return_value) {
+  new (local_buf) v8::Local<v8::Value>(return_value->Get());
+}
+}
+
+// v8::ScriptOrigin
+extern "C" {
+void v8cxx__script_origin_new(v8::ScriptOrigin* buf,
+                              const v8::Local<v8::Value>* resource_name,
+                              int resource_line_offset,
+                              int resource_column_offset,
+                              bool resource_is_shared_cross_origin,
+                              int script_id,
+                              const v8::Local<v8::Value>* source_map_url,
+                              bool resource_is_opaque,
+                              bool is_wasm,
+                              bool is_module,
+                              const v8::Local<v8::Data>* host_defined_options) {
+  new (buf) v8::ScriptOrigin(v8::ScriptOrigin(
+      *resource_name, resource_line_offset, resource_column_offset,
+      resource_is_shared_cross_origin, script_id, *source_map_url,
+      resource_is_opaque, is_wasm, is_module, *host_defined_options));
+}
+
+void v8cxx__script_origin_resource_name(v8::Local<v8::Value>* local_buf,
+                                        const v8::ScriptOrigin* script_origin) {
+  new (local_buf) v8::Local<v8::Value>(script_origin->ResourceName());
+}
+
+int v8cxx__script_origin_line_offset(const v8::ScriptOrigin* script_origin) {
+  return script_origin->LineOffset();
+}
+
+int v8cxx__script_origin_column_offset(const v8::ScriptOrigin* script_origin) {
+  return script_origin->ColumnOffset();
+}
+
+int v8cxx__script_origin_script_id(const v8::ScriptOrigin* script_origin) {
+  return script_origin->ScriptId();
+}
+
+void v8cxx__script_origin_source_map_url(
+    v8::Local<v8::Value>* local_buf,
+    const v8::ScriptOrigin* script_origin) {
+  new (local_buf) v8::Local<v8::Value>(script_origin->SourceMapUrl());
+}
+
+void v8cxx__script_origin_get_host_defined_options(
+    v8::Local<v8::Data>* local_buf,
+    const v8::ScriptOrigin* script_origin) {
+  new (local_buf) v8::Local<v8::Data>(script_origin->GetHostDefinedOptions());
+}
+
+bool v8cxx__script_origin_is_module(const v8::ScriptOrigin* script_origin) {
+  return script_origin->Options().IsModule();
+}
+
+bool v8cxx__script_origin_is_opaque(const v8::ScriptOrigin* script_origin) {
+  return script_origin->Options().IsOpaque();
+}
+
+bool v8cxx__script_origin_is_shared_cross_origin(
+    const v8::ScriptOrigin* script_origin) {
+  return script_origin->Options().IsSharedCrossOrigin();
+}
+
+bool v8cxx__script_origin_is_wasm(const v8::ScriptOrigin* script_origin) {
+  return script_origin->Options().IsWasm();
+}
+}
+
+// v8::ObjectTemplate
+extern "C" {
+void v8cxx__object_template_new(
+    v8::Local<v8::ObjectTemplate>* local_buf,
+    v8::Isolate* isolate,
+    const v8::Local<v8::FunctionTemplate>* constructor) {
+  new (local_buf) v8::Local<v8::ObjectTemplate>(
+      v8::ObjectTemplate::New(isolate, *constructor));
+}
+
+void v8cxx__object_template_new_instance(
+    v8::MaybeLocal<v8::Object>* local_buf,
+    v8::ObjectTemplate* object_template,
+    const v8::Local<v8::Context>* context) {
+  new (local_buf)
+      v8::MaybeLocal<v8::Object>(object_template->NewInstance(*context));
+}
+
+void v8cxx__object_template_set_named_property_handler(
+    v8::ObjectTemplate* object_template,
+    v8::NamedPropertyGetterCallback getter,
+    v8::NamedPropertySetterCallback setter,
+    v8::NamedPropertyQueryCallback query,
+    v8::NamedPropertyDeleterCallback deleter,
+    v8::NamedPropertyEnumeratorCallback enumerator,
+    v8::NamedPropertyDefinerCallback definer,
+    v8::NamedPropertyDescriptorCallback descriptor,
+    const v8::Local<v8::Value>* data,
+    v8::PropertyHandlerFlags flags) {
+  object_template->SetHandler(v8::NamedPropertyHandlerConfiguration(
+      getter, setter, query, deleter, enumerator, definer, descriptor, *data, flags));
+}
+
+void v8cxx__object_template_set_indexed_property_handler(
+    v8::ObjectTemplate* object_template,
+    v8::IndexedPropertyGetterCallbackV2 getter,
+    v8::IndexedPropertySetterCallbackV2 setter,
+    v8::IndexedPropertyQueryCallbackV2 query,
+    v8::IndexedPropertyDeleterCallbackV2 deleter,
+    v8::IndexedPropertyEnumeratorCallback enumerator,
+    v8::IndexedPropertyDefinerCallbackV2 definer,
+    v8::IndexedPropertyDescriptorCallbackV2 descriptor,
+    const v8::Local<v8::Value>* data,
+    v8::PropertyHandlerFlags flags) {
+  object_template->SetHandler(v8::IndexedPropertyHandlerConfiguration(
+      getter, setter, query, deleter, enumerator, definer, descriptor, *data, flags));
+}
+
+void v8cxx__object_template_set_call_as_function_handler(
+    v8::ObjectTemplate* object_template,
+    v8::FunctionCallback callback,
+    const v8::Local<v8::Value>* data) {
+  object_template->SetCallAsFunctionHandler(callback, *data);
+}
+
+void v8cxx__object_template_mark_as_undetectable(
+    v8::ObjectTemplate* object_template) {
+  object_template->MarkAsUndetectable();
+}
+
+// TODO: v8::ObjectTemplate::{
+//   SetAccessCheckCallback,
+//   SetAccessCheckCallbackAndHandler
+// }
+
+int v8cxx__object_template_internal_field_count(
+    const v8::ObjectTemplate* object_template) {
+  return object_template->InternalFieldCount();
+}
+
+void v8cxx__object_template_set_internal_field_count(
+    v8::ObjectTemplate* object_template,
+    int count) {
+  object_template->SetInternalFieldCount(count);
+}
+
+bool v8cxx__object_template_is_immutable_proto(
+    const v8::ObjectTemplate* object_template) {
+  return object_template->IsImmutableProto();
+}
+
+// TODO: v8::ObjectTemplate::{SetCodeLike, IsCodeLike}
+}
+
+// v8::PropertyCallbackInfo<T>
+extern "C" {
+v8::Isolate* v8cxx__property_callback_info_get_isolate(
+    const v8::PropertyCallbackInfo<v8::Value>* pci) {
+  return pci->GetIsolate();
+}
+
+void v8cxx__property_callback_info_data(
+    v8::Local<v8::Value>* local_buf,
+    const v8::PropertyCallbackInfo<v8::Value>* pci) {
+  new (local_buf) v8::Local<v8::Value>(pci->Data());
+}
+
+void v8cxx__property_callback_info_this(
+    v8::Local<v8::Object>* local_buf,
+    const v8::PropertyCallbackInfo<v8::Value>* pci) {
+  new (local_buf) v8::Local<v8::Object>(pci->This());
+}
+
+void v8cxx__property_callback_info_holder(
+    v8::Local<v8::Object>* local_buf,
+    const v8::PropertyCallbackInfo<v8::Value>* pci) {
+  new (local_buf) v8::Local<v8::Object>(pci->HolderV2());
+}
+
+void v8cxx__property_callback_info_get_return_value(
+    v8::ReturnValue<v8::Value>* buf,
+    const v8::PropertyCallbackInfo<v8::Value>* pci) {
+  new (buf) v8::ReturnValue<v8::Value>(pci->GetReturnValue());
+}
+
+bool v8cxx__property_callback_info_should_throw_on_error(
+    const v8::PropertyCallbackInfo<v8::Value>* pci) {
+  return pci->ShouldThrowOnError();
+}
+}
+
+// v8::Number
+extern "C" {
+void v8cxx__number_new(v8::Local<v8::Number>* local_buf,
+                       v8::Isolate* isolate,
+                       double value) {
+  new (local_buf) v8::Local<v8::Number>(v8::Number::New(isolate, value));
+}
+
+double v8cxx__number_value(const v8::Number* number) {
+  return number->Value();
+}
+}
+
+// v8::Integer
+extern "C" {
+void v8cxx__integer_new(v8::Local<v8::Integer>* local_buf,
+                        v8::Isolate* isolate,
+                        int32_t value) {
+  new (local_buf) v8::Local<v8::Integer>(v8::Integer::New(isolate, value));
+}
+
+void v8cxx__integer_new_from_unsigned(v8::Local<v8::Integer>* local_buf,
+                                      v8::Isolate* isolate,
+                                      uint32_t value) {
+  new (local_buf)
+      v8::Local<v8::Integer>(v8::Integer::NewFromUnsigned(isolate, value));
+}
+
+int64_t v8cxx__integer_value(const v8::Integer* integer) {
+  return integer->Value();
+}
+}
+
+// v8::Array
+extern "C" {
+uint32_t v8cxx__array_length(const v8::Array* array) {
+  return array->Length();
+}
+
+void v8cxx__array_new(v8::Local<v8::Array>* local_buf,
+                      v8::Isolate* isolate,
+                      int length) {
+  new (local_buf) v8::Local<v8::Array>(v8::Array::New(isolate, length));
+}
+
+void v8cxx__array_new_with_elements(v8::Local<v8::Array>* local_buf,
+                                    v8::Isolate* isolate,
+                                    const v8::Local<v8::Value>* elements,
+                                    size_t length) {
+  new (local_buf) v8::Local<v8::Array>(v8::Array::New(
+      isolate, const_cast<v8::Local<v8::Value>*>(elements), length));
+}
+}

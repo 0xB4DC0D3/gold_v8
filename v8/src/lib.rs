@@ -5,12 +5,17 @@ mod bindings {
     include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 }
 
+pub mod array;
 pub mod array_buffer;
 pub mod bigint;
 pub mod boolean;
 pub mod context;
 pub mod data;
 pub mod fixed_array;
+pub mod function;
+pub mod function_callback_info;
+pub mod function_template;
+pub mod integer;
 pub mod isolate;
 pub mod local;
 pub mod microtask_queue;
@@ -25,10 +30,15 @@ pub mod platform;
 pub mod primitive;
 pub mod primitive_array;
 pub mod private;
+pub mod property_callback_info;
+pub mod return_value;
 pub mod scope;
 pub mod script;
+pub mod script_origin;
+pub mod signature;
 pub mod string;
 pub mod symbol;
+pub mod template;
 pub mod v8;
 pub mod value;
 
