@@ -1,4 +1,6 @@
-use crate::{data::traits::Data, isolate::Isolate, local::Local};
+use crate::{
+    data::traits::Data, function_template::FunctionTemplate, isolate::Isolate, local::Local,
+};
 
 extern "C" {
     fn v8cxx__signature_new(
