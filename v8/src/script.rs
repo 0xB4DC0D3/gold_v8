@@ -3,6 +3,7 @@ use crate::{
     data::traits::Data,
     local::{Local, MaybeLocal},
     string::String,
+    unbound_script::UnboundScript,
     value::Value,
 };
 
@@ -12,13 +13,12 @@ extern "C" {
         context: *const Local<Context>,
         source: *const Local<String>,
     );
-
     fn v8cxx__script_run(
         maybe_local_buf: *mut MaybeLocal<Value>,
         script: *mut Script,
         context: *const Local<Context>,
     );
-
+    fn v8cxx__get_unbound_script(local_buf: *mut Local<UnboundScript>, this: *mut Script);
     fn v8cxx__script_get_resource_name(local_buf: *mut Local<Value>, script: *mut Script);
 }
 
@@ -44,6 +44,15 @@ impl Script {
         }
 
         maybe_local_value
+    }
+
+    #[inline(always)]
+    pub fn get_unbound_script(&mut self) -> Local<UnboundScript> {
+        let mut local_unbound_script = Local::empty();
+
+        unsafe { v8cxx__get_unbound_script(&mut local_unbound_script, self) };
+
+        local_unbound_script
     }
 
     #[inline(always)]
