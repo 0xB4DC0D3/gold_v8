@@ -1437,7 +1437,8 @@ void v8cxx__object_template_set_named_property_handler(
     const v8::Local<v8::Value>* data,
     v8::PropertyHandlerFlags flags) {
   object_template->SetHandler(v8::NamedPropertyHandlerConfiguration(
-      getter, setter, query, deleter, enumerator, definer, descriptor, *data, flags));
+      getter, setter, query, deleter, enumerator, definer, descriptor, *data,
+      flags));
 }
 
 void v8cxx__object_template_set_indexed_property_handler(
@@ -1452,7 +1453,8 @@ void v8cxx__object_template_set_indexed_property_handler(
     const v8::Local<v8::Value>* data,
     v8::PropertyHandlerFlags flags) {
   object_template->SetHandler(v8::IndexedPropertyHandlerConfiguration(
-      getter, setter, query, deleter, enumerator, definer, descriptor, *data, flags));
+      getter, setter, query, deleter, enumerator, definer, descriptor, *data,
+      flags));
 }
 
 void v8cxx__object_template_set_call_as_function_handler(
@@ -1579,5 +1581,21 @@ void v8cxx__array_new_with_elements(v8::Local<v8::Array>* local_buf,
                                     size_t length) {
   new (local_buf) v8::Local<v8::Array>(v8::Array::New(
       isolate, const_cast<v8::Local<v8::Value>*>(elements), length));
+}
+}
+
+// v8::UnboundModuleScript
+extern "C" {
+void v8cxx__unbound_module_script_get_source_url(
+    v8::Local<v8::Value>* local_buf,
+    v8::UnboundModuleScript* ums) {
+  new (local_buf) v8::Local<v8::Value>(ums->GetSourceURL());
+}
+
+void v8cxx__unbound_module_script_get_source_mapping_url(
+    v8::Local<v8::Value>* local_buf,
+    v8::UnboundModuleScript* ums) {
+  new (local_buf)
+      v8::Local<v8::Value>(ums->GetSourceMappingURL());
 }
 }
