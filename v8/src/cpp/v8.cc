@@ -1595,7 +1595,44 @@ void v8cxx__unbound_module_script_get_source_url(
 void v8cxx__unbound_module_script_get_source_mapping_url(
     v8::Local<v8::Value>* local_buf,
     v8::UnboundModuleScript* ums) {
-  new (local_buf)
-      v8::Local<v8::Value>(ums->GetSourceMappingURL());
+  new (local_buf) v8::Local<v8::Value>(ums->GetSourceMappingURL());
+}
+}
+
+// v8::UnboundScript
+extern "C" {
+void v8cxx__unbound_script_bind_to_current_context(
+    v8::Local<v8::Script>* local_buf,
+    v8::UnboundScript* us) {
+  new (local_buf) v8::Local<v8::Script>(us->BindToCurrentContext());
+}
+
+int v8cxx__unbound_script_get_id(const v8::UnboundScript* us) {
+  return us->GetId();
+}
+
+void v8cxx__unbound_script_get_script_name(v8::Local<v8::Value>* local_buf,
+                                           v8::UnboundScript* us) {
+  new (local_buf) v8::Local<v8::Value>(us->GetScriptName());
+}
+
+void v8cxx__unbound_script_get_source_url(v8::Local<v8::Value>* local_buf,
+                                          v8::UnboundScript* us) {
+  new (local_buf) v8::Local<v8::Value>(us->GetSourceURL());
+}
+
+void v8cxx__unbound_script_get_source_mapping_url(
+    v8::Local<v8::Value>* local_buf,
+    v8::UnboundScript* us) {
+  new (local_buf) v8::Local<v8::Value>(us->GetSourceMappingURL());
+}
+
+int v8cxx__unbound_script_get_line_number(v8::UnboundScript* us, int code_pos) {
+  return us->GetLineNumber(code_pos);
+}
+
+int v8cxx__unbound_script_get_column_number(v8::UnboundScript* us,
+                                            int code_pos) {
+  return us->GetColumnNumber(code_pos);
 }
 }
