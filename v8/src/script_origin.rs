@@ -3,7 +3,7 @@ use std::mem::MaybeUninit;
 use crate::{bindings, data::Data, local::Local, value::Value};
 
 extern "C" {
-    fn v8cxx_script_origin_new(
+    fn v8cxx__script_origin_new(
         buf: *mut ScriptOrigin,
         resource_name: *const Local<Value>,
         resource_line_offset: i32,
@@ -16,19 +16,19 @@ extern "C" {
         is_module: bool,
         host_defined_options: *const Local<Data>,
     );
-    fn v8cxx_script_origin_resource_name(local_buf: *mut Local<Value>, this: *const ScriptOrigin);
-    fn v8cxx_script_origin_line_offset(this: *const ScriptOrigin) -> i32;
-    fn v8cxx_script_origin_column_offset(this: *const ScriptOrigin) -> i32;
-    fn v8cxx_script_origin_script_id(this: *const ScriptOrigin) -> i32;
-    fn v8cxx_script_origin_source_map_url(local_buf: *mut Local<Value>, this: *const ScriptOrigin);
-    fn v8cxx_script_origin_get_host_defined_options(
+    fn v8cxx__script_origin_resource_name(local_buf: *mut Local<Value>, this: *const ScriptOrigin);
+    fn v8cxx__script_origin_line_offset(this: *const ScriptOrigin) -> i32;
+    fn v8cxx__script_origin_column_offset(this: *const ScriptOrigin) -> i32;
+    fn v8cxx__script_origin_script_id(this: *const ScriptOrigin) -> i32;
+    fn v8cxx__script_origin_source_map_url(local_buf: *mut Local<Value>, this: *const ScriptOrigin);
+    fn v8cxx__script_origin_get_host_defined_options(
         local_buf: *mut Local<Data>,
         this: *const ScriptOrigin,
     );
-    fn v8cxx_script_origin_is_module(this: *const ScriptOrigin) -> bool;
-    fn v8cxx_script_origin_is_opaque(this: *const ScriptOrigin) -> bool;
-    fn v8cxx_script_origin_is_shared_cross_origin(this: *const ScriptOrigin) -> bool;
-    fn v8cxx_script_origin_is_wasm(this: *const ScriptOrigin) -> bool;
+    fn v8cxx__script_origin_is_module(this: *const ScriptOrigin) -> bool;
+    fn v8cxx__script_origin_is_opaque(this: *const ScriptOrigin) -> bool;
+    fn v8cxx__script_origin_is_shared_cross_origin(this: *const ScriptOrigin) -> bool;
+    fn v8cxx__script_origin_is_wasm(this: *const ScriptOrigin) -> bool;
 }
 
 #[repr(C)]
@@ -51,7 +51,7 @@ impl ScriptOrigin {
         unsafe {
             let mut script_origin = MaybeUninit::zeroed();
 
-            v8cxx_script_origin_new(
+            v8cxx__script_origin_new(
                 script_origin.as_mut_ptr(),
                 resource_name,
                 resource_line_offset,
@@ -70,7 +70,7 @@ impl ScriptOrigin {
     }
 
     #[inline(always)]
-    pub fn new_default(resource_name: &Local<Value>) -> Self {
+    pub fn new_default(resource_name: &Local<Value>, is_module: bool) -> Self {
         Self::new(
             resource_name,
             0,
@@ -80,7 +80,7 @@ impl ScriptOrigin {
             &Local::empty(),
             false,
             false,
-            false,
+            is_module,
             &Local::empty(),
         )
     }
@@ -89,31 +89,31 @@ impl ScriptOrigin {
     pub fn resource_name(&self) -> Local<Value> {
         let mut local_value = Local::empty();
 
-        unsafe { v8cxx_script_origin_resource_name(&mut local_value, self) };
+        unsafe { v8cxx__script_origin_resource_name(&mut local_value, self) };
 
         local_value
     }
 
     #[inline(always)]
     pub fn line_offset(&self) -> i32 {
-        unsafe { v8cxx_script_origin_line_offset(self) }
+        unsafe { v8cxx__script_origin_line_offset(self) }
     }
 
     #[inline(always)]
     pub fn column_offset(&self) -> i32 {
-        unsafe { v8cxx_script_origin_column_offset(self) }
+        unsafe { v8cxx__script_origin_column_offset(self) }
     }
 
     #[inline(always)]
     pub fn script_id(&self) -> i32 {
-        unsafe { v8cxx_script_origin_script_id(self) }
+        unsafe { v8cxx__script_origin_script_id(self) }
     }
 
     #[inline(always)]
     pub fn source_map_url(&self) -> Local<Value> {
         let mut local_value = Local::empty();
 
-        unsafe { v8cxx_script_origin_source_map_url(&mut local_value, self) };
+        unsafe { v8cxx__script_origin_source_map_url(&mut local_value, self) };
 
         local_value
     }
@@ -122,28 +122,28 @@ impl ScriptOrigin {
     pub fn get_host_defined_options(&self) -> Local<Data> {
         let mut local_data = Local::empty();
 
-        unsafe { v8cxx_script_origin_get_host_defined_options(&mut local_data, self) };
+        unsafe { v8cxx__script_origin_get_host_defined_options(&mut local_data, self) };
 
         local_data
     }
 
     #[inline(always)]
     pub fn is_module(&self) -> bool {
-        unsafe { v8cxx_script_origin_is_module(self) }
+        unsafe { v8cxx__script_origin_is_module(self) }
     }
 
     #[inline(always)]
     pub fn is_opaque(&self) -> bool {
-        unsafe { v8cxx_script_origin_is_opaque(self) }
+        unsafe { v8cxx__script_origin_is_opaque(self) }
     }
 
     #[inline(always)]
     pub fn is_shared_cross_origin(&self) -> bool {
-        unsafe { v8cxx_script_origin_is_shared_cross_origin(self) }
+        unsafe { v8cxx__script_origin_is_shared_cross_origin(self) }
     }
 
     #[inline(always)]
     pub fn is_wasm(&self) -> bool {
-        unsafe { v8cxx_script_origin_is_wasm(self) }
+        unsafe { v8cxx__script_origin_is_wasm(self) }
     }
 }

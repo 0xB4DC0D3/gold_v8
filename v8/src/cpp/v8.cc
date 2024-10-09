@@ -567,9 +567,8 @@ void v8cxx__string_internalize_string(v8::Local<v8::String>* local_buf,
 }
 
 const char* v8cxx__string_view(const v8::String* string, v8::Isolate* isolate) {
-  auto local_string =
-      string->ToString(isolate->GetCurrentContext()).ToLocalChecked();
-  return *v8::String::Utf8Value(isolate, local_string);
+  return *v8::String::Utf8Value(
+      isolate, string->ToString(isolate->GetCurrentContext()).ToLocalChecked());
 }
 }
 
@@ -713,9 +712,7 @@ bool v8cxx__object_set(v8::Object* object,
                        const v8::MaybeLocal<v8::Object>* receiver) {
   auto result = false;
 
-  object->Set(*context, *key, *value, *receiver).FromMaybe(&result);
-
-  return result;
+  return object->Set(*context, *key, *value, *receiver).FromMaybe(&result);
 }
 
 bool v8cxx__object_set_indexed(v8::Object* object,
@@ -724,9 +721,7 @@ bool v8cxx__object_set_indexed(v8::Object* object,
                                const v8::Local<v8::Value>* value) {
   auto result = false;
 
-  object->Set(*context, index, *value).FromMaybe(&result);
-
-  return result;
+  return object->Set(*context, index, *value).FromMaybe(&result);
 }
 
 bool v8cxx__object_create_data_property(v8::Object* object,
@@ -735,9 +730,7 @@ bool v8cxx__object_create_data_property(v8::Object* object,
                                         const v8::Local<v8::Value>* value) {
   auto result = false;
 
-  object->CreateDataProperty(*context, *key, *value).FromMaybe(&result);
-
-  return result;
+  return object->CreateDataProperty(*context, *key, *value).FromMaybe(&result);
 }
 
 bool v8cxx__object_create_data_property_indexed(
@@ -747,9 +740,7 @@ bool v8cxx__object_create_data_property_indexed(
     const v8::Local<v8::Value>* value) {
   auto result = false;
 
-  object->CreateDataProperty(*context, index, *value).FromMaybe(&result);
-
-  return result;
+  return object->CreateDataProperty(*context, index, *value).FromMaybe(&result);
 }
 
 bool v8cxx__object_define_own_property(v8::Object* object,
@@ -759,10 +750,8 @@ bool v8cxx__object_define_own_property(v8::Object* object,
                                        v8::PropertyAttribute attributes) {
   auto result = false;
 
-  object->DefineOwnProperty(*context, *key, *value, attributes)
+  return object->DefineOwnProperty(*context, *key, *value, attributes)
       .FromMaybe(&result);
-
-  return result;
 }
 
 // TODO: v8cxx__object_define_property
@@ -826,15 +815,10 @@ int v8cxx__module_get_identity_hash(const v8::Module* module) {
 bool v8cxx__module_instantiate_module(
     v8::Module* module,
     const v8::Local<v8::Context>* context,
-    v8::Module::ResolveModuleCallback module_callback
-    // v8::Module::ResolveSourceCallback source_callback
-) {
+    v8::Module::ResolveModuleCallback module_callback) {
   auto result = false;
 
-  module->InstantiateModule(*context, module_callback, nullptr)
-      .FromMaybe(&result);
-
-  return result;
+  return module->InstantiateModule(*context, module_callback).FromMaybe(&result);
 }
 
 void v8cxx__module_evaluate(v8::MaybeLocal<v8::Value>* maybe_local_buf,
@@ -897,10 +881,8 @@ bool v8cxx__module_set_synthetic_module_export(
     const v8::Local<v8::Value>* export_value) {
   auto result = false;
 
-  module->SetSyntheticModuleExport(isolate, *export_name, *export_value)
+  return module->SetSyntheticModuleExport(isolate, *export_name, *export_value)
       .FromMaybe(&result);
-
-  return result;
 }
 
 // TODO: v8::Module::GetStalledTopLevelAwaitMessages
@@ -911,10 +893,18 @@ extern "C" {
 void v8cxx__local_empty(v8::Local<v8::Data>* local_buf) {
   new (local_buf) v8::Local<v8::Data>();
 }
+
+bool v8cxx__local_is_empty(const v8::Local<v8::Data>* local) {
+  return local->IsEmpty();
+}
 }
 
 // v8::MaybeLocal
 extern "C" {
+void v8cxx__maybe_local_empty(v8::MaybeLocal<v8::Data>* maybe_local_buf) {
+  new (maybe_local_buf) v8::MaybeLocal<v8::Data>(v8::MaybeLocal<v8::Data>());
+}
+
 bool v8cxx__maybe_local_is_empty(const v8::MaybeLocal<v8::Data>* maybe_local) {
   return maybe_local->IsEmpty();
 }
@@ -1633,5 +1623,57 @@ int v8cxx__unbound_script_get_line_number(v8::UnboundScript* us, int code_pos) {
 int v8cxx__unbound_script_get_column_number(v8::UnboundScript* us,
                                             int code_pos) {
   return us->GetColumnNumber(code_pos);
+}
+}
+
+// v8::ScriptCompiler
+extern "C" {
+void v8cxx__script_compiler_compile_unbound_script(
+    v8::MaybeLocal<v8::UnboundScript>* maybe_local_buf,
+    v8::Isolate* isolate,
+    v8::ScriptCompiler::Source* source) {
+  new (maybe_local_buf) v8::MaybeLocal<v8::UnboundScript>(
+      v8::ScriptCompiler::CompileUnboundScript(isolate, source));
+}
+
+void v8cxx__script_compiler_compile(v8::MaybeLocal<v8::Script>* maybe_local_buf,
+                                    const v8::Local<v8::Context>* context,
+                                    v8::ScriptCompiler::Source* source) {
+  new (maybe_local_buf)
+      v8::MaybeLocal<v8::Script>(v8::ScriptCompiler::Compile(*context, source));
+}
+
+void v8cxx__script_compiler_compile_module(
+    v8::MaybeLocal<v8::Module>* maybe_local_buf,
+    v8::Isolate* isolate,
+    v8::ScriptCompiler::Source* source) {
+  new (maybe_local_buf) v8::MaybeLocal<v8::Module>(
+      v8::ScriptCompiler::CompileModule(isolate, source));
+}
+
+void v8cxx__script_compiler_compile_function(
+    v8::MaybeLocal<v8::Function>* maybe_local_buf,
+    const v8::Local<v8::Context>* context,
+    v8::ScriptCompiler::Source* source,
+    size_t arguments_count,
+    v8::Local<v8::String>* arguments,
+    size_t context_extension_count,
+    v8::Local<v8::Object>* context_extensions) {
+  new (maybe_local_buf)
+      v8::MaybeLocal<v8::Function>(v8::ScriptCompiler::CompileFunction(
+          *context, source, arguments_count, arguments, context_extension_count,
+          context_extensions));
+}
+
+// TODO: implement other methods if needed
+}
+
+// v8::ScriptCompiler::Source
+extern "C" {
+void v8cxx__script_compiler__source_new(
+    v8::ScriptCompiler::Source* buf,
+    const v8::Local<v8::String>* source_string,
+    const v8::ScriptOrigin* origin) {
+  new (buf) v8::ScriptCompiler::Source(*source_string, *origin);
 }
 }

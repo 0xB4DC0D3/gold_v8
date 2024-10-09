@@ -11,3 +11,5 @@ static size_t v8cxx__sizeof_functioncallbackinfo =
     sizeof(v8::FunctionCallbackInfo<void>);
 static size_t v8cxx__sizeof_propertycallbackinfo =
     sizeof(v8::PropertyCallbackInfo<void>);
+static size_t v8cxx__sizeof_scriptcompiler__source =
+    sizeof(v8::ScriptCompiler::Source);

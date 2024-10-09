@@ -93,6 +93,21 @@ impl Function {
     }
 
     #[inline(always)]
+    pub fn new_default<F>(context: &Local<Context>, callback: F) -> MaybeLocal<Function>
+    where
+        F: Fn(&FunctionCallbackInfo<value::Value>),
+    {
+        Self::new(
+            context,
+            callback,
+            Local::<value::Value>::empty().cast_ref(),
+            0,
+            ConstructorBehavior::Allow,
+            SideEffectType::HasSideEffect,
+        )
+    }
+
+    #[inline(always)]
     pub fn new_instance(
         &self,
         context: &Local<Context>,
