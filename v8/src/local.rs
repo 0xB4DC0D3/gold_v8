@@ -1,5 +1,5 @@
 use std::{
-    mem::transmute,
+    mem::{transmute, MaybeUninit},
     ops::{Deref, DerefMut},
     ptr::NonNull,
 };
@@ -8,12 +8,17 @@ use crate::data::{self, traits::Data};
 
 extern "C" {
     fn v8cxx__local_empty(local_buf: *mut Local<data::Data>);
+    fn v8cxx__local_is_empty(this: *const Local<data::Data>) -> bool;
 }
 
 #[repr(C)]
 pub struct Local<T: Data>(NonNull<T>);
 
 impl<T: Data> Local<T> {
+    pub fn get_ptr(&self) -> *mut T {
+        self.0.as_ptr()
+    }
+
     #[inline(always)]
     pub fn empty() -> Self {
         let mut local = Self(NonNull::dangling());
@@ -21,6 +26,11 @@ impl<T: Data> Local<T> {
         unsafe { v8cxx__local_empty(local.cast_mut()) };
 
         local
+    }
+
+    #[inline(always)]
+    pub fn is_empty(&self) -> bool {
+        unsafe { v8cxx__local_is_empty(self.cast_ref()) }
     }
 
     #[inline(always)]
@@ -60,6 +70,7 @@ impl<T: Data> Drop for Local<T> {
 }
 
 extern "C" {
+    fn v8cxx__maybe_local_empty(maybe_local_buf: *mut MaybeLocal<data::Data>);
     fn v8cxx__maybe_local_is_empty(this: *const MaybeLocal<data::Data>) -> bool;
     fn v8cxx__maybe_local_to_local(
         this: *const MaybeLocal<data::Data>,
@@ -82,7 +93,18 @@ pub struct MaybeLocal<T: Data>(Local<T>);
 impl<T: Data> MaybeLocal<T> {
     #[inline(always)]
     pub fn empty() -> Self {
-        Self(Local::empty())
+        unsafe {
+            let mut maybe_local = MaybeUninit::uninit();
+
+            v8cxx__maybe_local_empty(maybe_local.as_mut_ptr());
+
+            maybe_local.assume_init().cast()
+        }
+    }
+
+    #[inline(always)]
+    pub fn from_local(local: Local<T>) -> Self {
+        Self(local)
     }
 
     #[inline(always)]

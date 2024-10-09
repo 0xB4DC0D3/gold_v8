@@ -34,6 +34,7 @@ pub mod property_callback_info;
 pub mod return_value;
 pub mod scope;
 pub mod script;
+pub mod script_compiler;
 pub mod script_origin;
 pub mod signature;
 pub mod string;

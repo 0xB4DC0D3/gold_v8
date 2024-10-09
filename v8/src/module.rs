@@ -20,7 +20,6 @@ extern "C" {
         this: *mut Module,
         context: *const Local<Context>,
         module_callback: ExternResolveModuleCallback,
-        // source_callback: Option<ExternResolveSourceCallback>,
     ) -> bool;
     fn v8cxx__module_evaluate(
         maybe_local_buf: *mut MaybeLocal<Value>,
@@ -202,7 +201,7 @@ impl Module {
 impl Data for Module {}
 
 type ExternSyntheticModuleEvaluationSteps =
-    extern "C" fn(Local<Context>, Local<Module>) -> MaybeLocal<Value>;
+    extern "C" fn(*mut MaybeLocal<Value>, Local<Context>, Local<Module>) -> *mut MaybeLocal<Value>;
 
 impl<T> ClosureToFunction<ExternSyntheticModuleEvaluationSteps> for T
 where
@@ -210,13 +209,16 @@ where
 {
     fn to_function(self) -> ExternSyntheticModuleEvaluationSteps {
         extern "C" fn function<T>(
+            return_value: *mut MaybeLocal<Value>,
             context: Local<Context>,
             module: Local<Module>,
-        ) -> MaybeLocal<Value>
+        ) -> *mut MaybeLocal<Value>
         where
             T: Fn(Local<Context>, Local<Module>) -> MaybeLocal<Value>,
         {
-            T::get()(context, module)
+            unsafe { return_value.write(T::get()(context, module)) };
+
+            return_value
         }
 
         function::<T>
@@ -224,23 +226,30 @@ where
 }
 
 type ExternResolveModuleCallback = extern "C" fn(
+    *mut MaybeLocal<Module>,
     Local<Context>,
     Local<String>,
     Local<FixedArray>,
     Local<Module>,
-) -> MaybeLocal<Module>;
+) -> *mut MaybeLocal<Module>;
 
 impl<T> ClosureToFunction<ExternResolveModuleCallback> for T
 where
-    T: Fn(Local<Context>, Local<String>, Local<FixedArray>, Local<Module>) -> MaybeLocal<Module>,
+    T: Fn(
+        Local<Context>,
+        Local<String>,
+        Local<FixedArray>,
+        Local<Module>,
+    ) -> MaybeLocal<Module>,
 {
     fn to_function(self) -> ExternResolveModuleCallback {
         extern "C" fn function<T>(
+            return_value: *mut MaybeLocal<Module>,
             context: Local<Context>,
             specifier: Local<String>,
             import_attributes: Local<FixedArray>,
             referrer: Local<Module>,
-        ) -> MaybeLocal<Module>
+        ) -> *mut MaybeLocal<Module>
         where
             T: Fn(
                 Local<Context>,
@@ -249,7 +258,9 @@ where
                 Local<Module>,
             ) -> MaybeLocal<Module>,
         {
-            T::get()(context, specifier, import_attributes, referrer)
+            unsafe { return_value.write(T::get()(context, specifier, import_attributes, referrer)) }
+
+            return_value
         }
 
         function::<T>
