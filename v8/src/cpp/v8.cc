@@ -46,8 +46,56 @@ bool v8cxx__v8__dispose() {
 
 // v8::ArrayBuffer
 extern "C" {
+size_t v8cxx__array_buffer_byte_length(const v8::ArrayBuffer* ab) {
+  return ab->ByteLength();
+}
+
+size_t v8cxx__array_buffer_max_byte_length(const v8::ArrayBuffer* ab) {
+  return ab->MaxByteLength();
+}
+
+void v8cxx__array_buffer_new(v8::Local<v8::ArrayBuffer>* local_buf,
+                             v8::Isolate* isolate,
+                             size_t byte_length,
+                             v8::BackingStoreInitializationMode init_mode) {
+  new (local_buf) v8::Local<v8::ArrayBuffer>(
+      v8::ArrayBuffer::New(isolate, byte_length, init_mode));
+}
+
+bool v8cxx__array_buffer_is_detachable(const v8::ArrayBuffer* ab) {
+  return ab->IsDetachable();
+}
+
+bool v8cxx__array_buffer_was_detached(const v8::ArrayBuffer* ab) {
+  return ab->WasDetached();
+}
+
+bool v8cxx__array_buffer_detach(v8::ArrayBuffer* ab,
+                                const v8::Local<v8::Value>* key) {
+  auto result = false;
+
+  return ab->Detach(*key).FromMaybe(&result);
+}
+
+void v8cxx__array_buffer_set_detach_key(v8::ArrayBuffer* ab,
+                                        const v8::Local<v8::Value>* key) {
+  ab->SetDetachKey(*key);
+}
+
+bool v8cxx__array_buffer_is_resizable_by_user_javascript(
+    const v8::ArrayBuffer* ab) {
+  return ab->IsResizableByUserJavaScript();
+}
+
+void* v8cxx__array_buffer_data(const v8::ArrayBuffer* ab) {
+  return ab->Data();
+}
+}
+
+// v8::ArrayBuffer::Allocator
+extern "C" {
 v8::ArrayBuffer::Allocator*
-v8cxx__arraybuffer__allocator_new_default_allocator() {
+v8cxx__array_buffer__allocator_new_default_allocator() {
   return v8::ArrayBuffer::Allocator::NewDefaultAllocator();
 }
 }
@@ -818,7 +866,8 @@ bool v8cxx__module_instantiate_module(
     v8::Module::ResolveModuleCallback module_callback) {
   auto result = false;
 
-  return module->InstantiateModule(*context, module_callback).FromMaybe(&result);
+  return module->InstantiateModule(*context, module_callback)
+      .FromMaybe(&result);
 }
 
 void v8cxx__module_evaluate(v8::MaybeLocal<v8::Value>* maybe_local_buf,
