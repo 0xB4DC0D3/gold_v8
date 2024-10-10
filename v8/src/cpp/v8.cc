@@ -1726,3 +1726,74 @@ void v8cxx__script_compiler__source_new(
   new (buf) v8::ScriptCompiler::Source(*source_string, *origin);
 }
 }
+
+// v8::Promise
+extern "C" {
+void v8cxx__promise_catch(v8::MaybeLocal<v8::Promise>* maybe_local_buf,
+                          v8::Promise* promise,
+                          const v8::Local<v8::Context>* context,
+                          const v8::Local<v8::Function>* handler) {
+  new (maybe_local_buf)
+      v8::MaybeLocal<v8::Promise>(promise->Catch(*context, *handler));
+}
+
+void v8cxx__promise_then(v8::MaybeLocal<v8::Promise>* maybe_local_buf,
+                         v8::Promise* promise,
+                         const v8::Local<v8::Context>* context,
+                         const v8::Local<v8::Function>* handler) {
+  new (maybe_local_buf)
+      v8::MaybeLocal<v8::Promise>(promise->Then(*context, *handler));
+}
+
+bool v8cxx__promise_has_handler(const v8::Promise* promise) {
+  return promise->HasHandler();
+}
+
+void v8cxx__promise_result(v8::Local<v8::Value>* local_buf,
+                           v8::Promise* promise) {
+  new (local_buf) v8::Local<v8::Value>(promise->Result());
+}
+
+v8::Promise::PromiseState v8cxx__promise_state(v8::Promise* promise) {
+  return promise->State();
+}
+
+void v8cxx__promise_mark_as_handled(v8::Promise* promise) {
+  promise->MarkAsHandled();
+}
+
+void v8cxx__promise_mark_as_silent(v8::Promise* promise) {
+  promise->MarkAsSilent();
+}
+}
+
+// v8::Promise::Resolver
+extern "C" {
+void v8cxx__promise__resolver_new(
+    v8::MaybeLocal<v8::Promise::Resolver>* maybe_local_buf,
+    const v8::Local<v8::Context>* context) {
+  new (maybe_local_buf) v8::MaybeLocal<v8::Promise::Resolver>(
+      v8::Promise::Resolver::New(*context));
+}
+
+void v8cxx__promise__resolver_get_promise(v8::Local<v8::Promise>* local_buf,
+                                          v8::Promise::Resolver* pr) {
+  new (local_buf) v8::Local<v8::Promise>(pr->GetPromise());
+}
+
+bool v8cxx__promise__resolver_resolve(v8::Promise::Resolver* pr,
+                                      const v8::Local<v8::Context>* context,
+                                      const v8::Local<v8::Value>* value) {
+  auto result = false;
+
+  return pr->Resolve(*context, *value).FromMaybe(&result);
+}
+
+bool v8cxx__promise__resolver_reject(v8::Promise::Resolver* pr,
+                                     const v8::Local<v8::Context>* context,
+                                     const v8::Local<v8::Value>* value) {
+  auto result = false;
+
+  return pr->Reject(*context, *value).FromMaybe(&result);
+}
+}

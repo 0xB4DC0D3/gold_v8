@@ -30,6 +30,7 @@ pub mod platform;
 pub mod primitive;
 pub mod primitive_array;
 pub mod private;
+pub mod promise;
 pub mod property_callback_info;
 pub mod return_value;
 pub mod scope;
