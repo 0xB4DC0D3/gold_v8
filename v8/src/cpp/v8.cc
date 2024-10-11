@@ -1797,3 +1797,76 @@ bool v8cxx__promise__resolver_reject(v8::Promise::Resolver* pr,
   return pr->Reject(*context, *value).FromMaybe(&result);
 }
 }
+
+// v8::TryCatch
+extern "C" {
+class TryCatch {
+ public:
+  TryCatch(v8::Isolate* isolate) : try_catch(isolate) {}
+  ~TryCatch() {}
+
+  v8::TryCatch& get() { return this->try_catch; }
+  const v8::TryCatch& get() const { return this->try_catch; }
+
+ private:
+  v8::TryCatch try_catch;
+};
+
+void v8cxx__try_catch_new(TryCatch* buf, v8::Isolate* isolate) {
+  new (buf) TryCatch(isolate);
+}
+
+void v8cxx__try_catch_drop(TryCatch* try_catch) {
+  try_catch->~TryCatch();
+}
+
+bool v8cxx__try_catch_has_caught(const TryCatch* try_catch) {
+  return try_catch->get().HasCaught();
+}
+
+bool v8cxx__try_catch_can_continue(const TryCatch* try_catch) {
+  return try_catch->get().CanContinue();
+}
+
+bool v8cxx__try_catch_has_terminated(const TryCatch* try_catch) {
+  return try_catch->get().HasTerminated();
+}
+
+void v8cxx__try_catch_rethrow(v8::Local<v8::Value>* local_buf,
+                              TryCatch* try_catch) {
+  new (local_buf) v8::Local<v8::Value>(try_catch->get().ReThrow());
+}
+
+void v8cxx__try_catch_exception(v8::Local<v8::Value>* local_buf,
+                                const TryCatch* try_catch) {
+  new (local_buf) v8::Local<v8::Value>(try_catch->get().Exception());
+}
+
+void v8cxx__try_catch_stack_trace(v8::MaybeLocal<v8::Value>* maybe_local_buf,
+                                  const v8::Local<v8::Context>* context,
+                                  const v8::Local<v8::Value>* exception) {
+  new (maybe_local_buf)
+      v8::MaybeLocal<v8::Value>(v8::TryCatch::StackTrace(*context, *exception));
+}
+
+void v8cxx__try_catch_message(v8::Local<v8::Message>* local_buf,
+                              const TryCatch* try_catch) {
+  new (local_buf) v8::Local<v8::Message>(try_catch->get().Message());
+}
+
+void v8cxx__try_catch_reset(TryCatch* try_catch) {
+  try_catch->get().Reset();
+}
+
+void v8cxx__try_catch_set_verbose(TryCatch* try_catch, bool value) {
+  try_catch->get().SetVerbose(value);
+}
+
+bool v8cxx__try_catch_is_verbose(const TryCatch* try_catch) {
+  return try_catch->get().IsVerbose();
+}
+
+void v8cxx__try_catch_set_capture_message(TryCatch* try_catch, bool value) {
+  try_catch->get().SetCaptureMessage(value);
+}
+}

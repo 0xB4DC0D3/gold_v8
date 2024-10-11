@@ -13,3 +13,4 @@ static size_t v8cxx__sizeof_propertycallbackinfo =
     sizeof(v8::PropertyCallbackInfo<void>);
 static size_t v8cxx__sizeof_scriptcompiler__source =
     sizeof(v8::ScriptCompiler::Source);
+static size_t v8cxx__sizeof_trycatch = sizeof(v8::TryCatch);
