@@ -1,4 +1,7 @@
-use std::ops::{Deref, DerefMut};
+use std::{
+    mem::MaybeUninit,
+    ops::{Deref, DerefMut},
+};
 
 use crate::{bindings, context::Context, isolate::Isolate, local::Local};
 
@@ -14,13 +17,13 @@ pub struct HandleScope([u8; bindings::v8cxx__sizeof_handlescope]);
 impl HandleScope {
     #[inline(always)]
     pub fn new(isolate: &mut Isolate) -> Self {
-        let mut buf = Self(Default::default());
-
         unsafe {
-            v8cxx__handlescope_new(&mut buf, isolate);
-        }
+            let mut buf = MaybeUninit::uninit();
 
-        buf
+            v8cxx__handlescope_new(buf.as_mut_ptr(), isolate);
+
+            buf.assume_init()
+        }
     }
 
     #[inline(always)]
@@ -38,13 +41,15 @@ impl Drop for HandleScope {
 impl Deref for HandleScope {
     type Target = Isolate;
     fn deref(&self) -> &Self::Target {
-        self.get_isolate().expect("Can't get `Isolate` from `HandleScope`")
+        self.get_isolate()
+            .expect("Can't get `Isolate` from `HandleScope`")
     }
 }
 
 impl DerefMut for HandleScope {
     fn deref_mut(&mut self) -> &mut Self::Target {
-        self.get_isolate().expect("Can't get mutable `Isolate` from `HandleScope`")
+        self.get_isolate()
+            .expect("Can't get mutable `Isolate` from `HandleScope`")
     }
 }
 

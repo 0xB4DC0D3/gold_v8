@@ -41,6 +41,7 @@ pub mod signature;
 pub mod string;
 pub mod symbol;
 pub mod template;
+pub mod try_catch;
 pub mod unbound_module_script;
 pub mod unbound_script;
 pub mod v8;
