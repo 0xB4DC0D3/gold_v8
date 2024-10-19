@@ -692,6 +692,20 @@ void v8cxx__bigint_new(Local<BigInt>* local_buf,
                        int64_t value) {
   new (local_buf) Local<BigInt>(v8::BigInt::New(isolate, value));
 }
+
+void v8cxx__bigint_new_from_unsigned(Local<BigInt>* local_buf,
+                                     Isolate* isolate,
+                                     uint64_t value) {
+  new (local_buf) Local<BigInt>(v8::BigInt::NewFromUnsigned(isolate, value));
+}
+
+uint64_t v8cxx__bigint_uint64_value(const BigInt* big_int, bool* lossless) {
+  return big_int->Uint64Value(lossless);
+}
+
+int64_t v8cxx__bigint_int64_value(const BigInt* big_int, bool* lossless) {
+  return big_int->Int64Value(lossless);
+}
 }
 
 // v8::Script
