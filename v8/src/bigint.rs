@@ -1,6 +1,6 @@
 use crate::{
-    data::traits::Data, isolate::Isolate, local::Local, primitive::traits::Primitive,
-    value::traits::Value,
+    data::traits::Data, isolate::Isolate, local::Local, numeric::traits::Numeric,
+    primitive::traits::Primitive, value::traits::Value,
 };
 
 extern "C" {
@@ -66,5 +66,6 @@ impl BigInt {
 }
 
 impl Data for BigInt {}
-impl Primitive for BigInt {}
 impl Value for BigInt {}
+impl Primitive for BigInt {}
+impl Numeric for BigInt {}
