@@ -3,7 +3,7 @@ use std::ffi::c_void;
 use crate::{
     c_support::ClosureToFunction, data::traits::Data, function::Function, isolate::Isolate,
     local::Local, microtask_queue::MicrotaskQueue, object::Object, object_template::ObjectTemplate,
-    value::Value,
+    string::String, value::Value,
 };
 
 extern "C" {
@@ -77,23 +77,25 @@ pub struct Context([u8; 0]);
 
 impl Context {
     #[inline(always)]
-    pub fn new(isolate: &mut Isolate, options: Option<ContextOptions>) -> Local<Self> {
+    pub fn new(isolate: &mut Isolate, mut options: Option<ContextOptions>) -> Local<Self> {
         let mut local_context = Local::empty();
 
         unsafe {
             v8cxx__context_new(
                 &mut local_context,
                 isolate,
-                match &options {
-                    Some(options) => &options.global_template,
+                match options.as_ref() {
+                    Some(options) => options.global_template.cast_ref(),
                     None => std::ptr::null::<Local<ObjectTemplate>>(),
                 },
-                match &options {
-                    Some(options) => &options.global_object,
+                match options.as_ref() {
+                    Some(options) => options.global_object.cast_ref(),
                     None => std::ptr::null::<Local<Value>>(),
                 },
-                // TODO: MicrotaskQueue
-                std::ptr::null_mut(),
+                match options.as_mut() {
+                    Some(options) => options.microtask_queue.as_mut().unwrap(),
+                    None => std::ptr::null_mut(),
+                },
             );
         }
 
@@ -224,7 +226,7 @@ impl Context {
     }
 
     #[inline(always)]
-    pub fn set_abort_script_execution(&mut self, callback: impl Fn(&mut Isolate, *mut c_void)) {
+    pub fn set_abort_script_execution(&mut self, callback: impl Fn(&mut Isolate, Local<Context>)) {
         unsafe { v8cxx__context_set_abort_script_execution(self, callback.to_function()) };
     }
 
@@ -262,6 +264,8 @@ where
         {
             T::get()(unsafe { isolate.as_mut().unwrap() }, context)
         }
+
+        function::<T>
     }
 }
 

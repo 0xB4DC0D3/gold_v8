@@ -284,7 +284,7 @@ void v8cxx__context_set_promise_hooks(Context* context,
 
 bool v8cxx__context_has_template_literal_object(Context* context,
                                                 const Local<Value>* object) {
-  context->HasTemplateLiteralObject(*object);
+  return context->HasTemplateLiteralObject(*object);
 }
 }
 
@@ -1239,9 +1239,27 @@ void v8cxx__function_template_remove_prototype(FunctionTemplate* fn_template) {
   fn_template->RemovePrototype();
 }
 
-bool v8cxx__funtion_template_has_instance(FunctionTemplate* fn_template,
-                                          const Local<Value>* object) {
+bool v8cxx__function_template_has_instance(FunctionTemplate* fn_template,
+                                           const Local<Value>* object) {
   return fn_template->HasInstance(*object);
+}
+
+void v8cxx__function_template_set_exception_context(
+    FunctionTemplate* fn_template,
+    ExceptionContext context) {
+  fn_template->SetExceptionContext(context);
+}
+
+void v8cxx__function_template_set_accept_any_receiver(
+    FunctionTemplate* fn_template,
+    bool accept) {
+  fn_template->SetAcceptAnyReceiver(accept);
+}
+
+bool v8cxx__function_template_is_leaf_template_for_api_object(
+    const FunctionTemplate* fn_template,
+    const Local<Value>* value) {
+  return fn_template->IsLeafTemplateForApiObject(*value);
 }
 }
 
