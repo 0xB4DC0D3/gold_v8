@@ -160,6 +160,7 @@ Isolate* v8cxx__handlescope_get_isolate(const ::HandleScope* handle_scope) {
 
 // v8::Context
 extern "C" {
+// TODO: extend functionality of Context::new
 void v8cxx__context_new(Local<Context>* local_buf,
                         Isolate* isolate,
                         const Local<ObjectTemplate>* global_template,
@@ -200,6 +201,90 @@ MicrotaskQueue* v8cxx__context_get_microtask_queue(Context* context) {
 void v8cxx__context_set_microtask_queue(Context* context,
                                         MicrotaskQueue* microtask_queue) {
   context->SetMicrotaskQueue(microtask_queue);
+}
+
+void v8cxx__context_set_security_token(Context* context,
+                                       const Local<Value>* token) {
+  context->SetSecurityToken(*token);
+}
+
+void v8cxx__context_use_default_security_token(Context* context) {
+  context->UseDefaultSecurityToken();
+}
+
+uint32_t v8cxx__context_get_number_of_embedder_data_fields(Context* context) {
+  return context->GetNumberOfEmbedderDataFields();
+}
+
+void v8cxx__context_get_embedder_data(Local<Value>* local_buf,
+                                      Context* context,
+                                      int index) {
+  new (local_buf) Local<Value>(context->GetEmbedderData(index));
+}
+
+void v8cxx__context_get_extras_binding_object(Local<Object>* local_buf,
+                                              Context* context) {
+  new (local_buf) Local<Object>(context->GetExtrasBindingObject());
+}
+
+void v8cxx__context_set_embedder_data(Context* context,
+                                      int index,
+                                      const Local<Value>* value) {
+  context->SetEmbedderData(index, *value);
+}
+
+void* v8cxx__context_get_aligned_pointer_from_embedder_data(Context* context,
+                                                            Isolate* isolate,
+                                                            int index) {
+  return context->GetAlignedPointerFromEmbedderData(isolate, index);
+}
+
+void v8cxx__context_set_aligned_pointer_in_embedder_data(Context* context,
+                                                         int index,
+                                                         void* value) {
+  context->SetAlignedPointerInEmbedderData(index, value);
+}
+
+void v8cxx__context_allow_code_generation_from_strings(Context* context,
+                                                       bool allow) {
+  context->AllowCodeGenerationFromStrings(allow);
+}
+
+bool v8cxx__context_is_code_generation_from_string_allowed(
+    const Context* context) {
+  return context->IsCodeGenerationFromStringsAllowed();
+}
+
+void v8cxx__context_set_error_message_for_code_generation_from_strings(
+    Context* context,
+    const Local<String>* message) {
+  context->SetErrorMessageForCodeGenerationFromStrings(*message);
+}
+
+void v8cxx__context_set_error_message_for_wasm_code_generation(
+    Context* context,
+    const Local<String>* message) {
+  context->SetErrorMessageForWasmCodeGeneration(*message);
+}
+
+void v8cxx__context_set_abort_script_execution(
+    Context* context,
+    Context::AbortScriptExecutionCallback callback) {
+  context->SetAbortScriptExecution(callback);
+}
+
+void v8cxx__context_set_promise_hooks(Context* context,
+                                      const Local<Function>* init_hook,
+                                      const Local<Function>* before_hook,
+                                      const Local<Function>* after_hook,
+                                      const Local<Function>* resolve_hook) {
+  context->SetPromiseHooks(*init_hook, *before_hook, *after_hook,
+                           *resolve_hook);
+}
+
+bool v8cxx__context_has_template_literal_object(Context* context,
+                                                const Local<Value>* object) {
+  context->HasTemplateLiteralObject(*object);
 }
 }
 
