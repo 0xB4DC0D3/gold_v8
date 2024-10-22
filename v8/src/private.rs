@@ -1,13 +1,13 @@
 use crate::{data::traits::Data, isolate::Isolate, local::Local, string::String, value::Value};
 
 extern "C" {
-    pub fn v8cxx__private_name(local_buf: *mut Local<Value>, private: *const Private);
-    pub fn v8cxx__private_new(
+    fn v8cxx__private_name(local_buf: *mut Local<Value>, private: *const Private);
+    fn v8cxx__private_new(
         local_buf: *mut Local<Private>,
         isolate: *mut Isolate,
         name: *const Local<String>,
     );
-    pub fn v8cxx__private_for_api(
+    fn v8cxx__private_for_api(
         local_buf: *mut Local<Private>,
         isolate: *mut Isolate,
         name: *const Local<String>,

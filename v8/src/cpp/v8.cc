@@ -1836,3 +1836,58 @@ void v8cxx__try_catch_set_capture_message(::TryCatch* try_catch, bool value) {
   try_catch->get().SetCaptureMessage(value);
 }
 }
+
+// v8::MicrotaskQueue
+extern "C" {
+MicrotaskQueue* v8cxx__microtask_queue_new(Isolate* isolate,
+                                           MicrotasksPolicy policy) {
+  return MicrotaskQueue::New(isolate, policy).release();
+}
+
+void v8cxx__microtask_queue_drop(MicrotaskQueue* self) {
+  self->~MicrotaskQueue();
+}
+
+void v8cxx__microtask_queue_enqueue_microtask(
+    MicrotaskQueue* self,
+    Isolate* isolate,
+    const Local<Function>* microtask) {
+  self->EnqueueMicrotask(isolate, *microtask);
+}
+
+void v8cxx__microtask_queue_enqueue_microtask_with_callback(
+    MicrotaskQueue* self,
+    Isolate* isolate,
+    MicrotaskCallback callback,
+    void* data) {
+  self->EnqueueMicrotask(isolate, callback, data);
+}
+
+void v8cxx__microtask_queue_add_microtasks_completed_callback(
+    MicrotaskQueue* self,
+    MicrotasksCompletedCallbackWithData callback,
+    void* data) {
+  self->AddMicrotasksCompletedCallback(callback, data);
+}
+
+void v8cxx__microtask_queue_remove_microtasks_completed_callback(
+    MicrotaskQueue* self,
+    MicrotasksCompletedCallbackWithData callback,
+    void* data) {
+  self->RemoveMicrotasksCompletedCallback(callback, data);
+}
+
+void v8cxx__microtask_queue_perform_checkpoint(MicrotaskQueue* self,
+                                               Isolate* isolate) {
+  self->PerformCheckpoint(isolate);
+}
+
+bool v8cxx__microtask_queue_is_running_microtasks(const MicrotaskQueue* self) {
+  return self->IsRunningMicrotasks();
+}
+
+int v8cxx__microtask_queue_get_microtasks_scope_depth(
+    const MicrotaskQueue* self) {
+  return self->GetMicrotasksScopeDepth();
+}
+}
