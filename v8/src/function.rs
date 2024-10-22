@@ -6,6 +6,7 @@ use crate::{
     data::traits::Data,
     function_callback_info::FunctionCallbackInfo,
     function_template::{ConstructorBehavior, SideEffectType},
+    isolate::Isolate,
     local::{Local, MaybeLocal},
     object::{self, traits::Object},
     script_origin::ScriptOrigin,
@@ -37,6 +38,15 @@ extern "C" {
         argc: i32,
         argv: *mut Local<value::Value>,
         side_effect_type: SideEffectType,
+    );
+    fn v8cxx__function_call(
+        maybe_local_buf: *mut MaybeLocal<value::Value>,
+        this: *mut Function,
+        isolate: *mut Isolate,
+        context: *const Local<Context>,
+        receiver: *const Local<value::Value>,
+        argc: isize,
+        argv: *mut Local<value::Value>,
     );
     fn v8cxx__function_set_name(this: *mut Function, name: *const Local<String>);
     fn v8cxx__function_get_name(local_buf: *mut Local<value::Value>, this: *const Function);
@@ -149,6 +159,31 @@ impl Function {
         };
 
         maybe_local_object
+    }
+
+    #[inline(always)]
+    pub fn call(
+        &mut self,
+        isolate: &mut Isolate,
+        context: &Local<Context>,
+        receiver: &Local<value::Value>,
+        mut args: Vec<Local<value::Value>>,
+    ) -> MaybeLocal<value::Value> {
+        let mut maybe_local_value = MaybeLocal::empty();
+
+        unsafe {
+            v8cxx__function_call(
+                &mut maybe_local_value,
+                self,
+                isolate,
+                context,
+                receiver,
+                args.len() as isize,
+                args.as_mut_ptr(),
+            )
+        };
+
+        maybe_local_value
     }
 
     #[inline(always)]

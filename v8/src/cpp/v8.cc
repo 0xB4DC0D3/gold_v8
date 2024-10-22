@@ -1297,6 +1297,17 @@ void v8cxx__function_new_instance_with_side_effect_type(
           *context, argc, argv, side_effect_type));
 }
 
+void v8cxx__function_call(MaybeLocal<Value>* maybe_local_buf,
+                          Function* function,
+                          Isolate* isolate,
+                          const Local<Context>* context,
+                          const Local<Value>* receiver,
+                          int argc,
+                          Local<Value>* argv) {
+  new (maybe_local_buf) MaybeLocal<Value>(
+      function->Call(isolate, *context, *receiver, argc, argv));
+}
+
 void v8cxx__function_set_name(Function* function, const Local<String>* name) {
   function->SetName(*name);
 }
