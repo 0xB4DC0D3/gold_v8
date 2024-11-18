@@ -100,7 +100,7 @@ ArrayBuffer::Allocator* v8cxx__array_buffer__allocator_new_default_allocator() {
 }
 }
 
-// v8::Isolate
+// v8::Isolate::CreateParams
 extern "C" {
 Isolate::CreateParams v8cxx__isolate__createparams(
     ArrayBuffer::Allocator* array_buffer_allocator) {
@@ -109,7 +109,13 @@ Isolate::CreateParams v8cxx__isolate__createparams(
 
   return create_params;
 }
+}
 
+// TODO: add AllowJavascriptExecutionScope, DisllowJavascriptExecutionScope,
+// SuppressMicrotaskExecutionScope
+
+// v8::Isolate
+extern "C" {
 Isolate* v8cxx__isolate_new(const Isolate::CreateParams& create_params) {
   return Isolate::New(create_params);
 }
@@ -129,6 +135,261 @@ void v8cxx__isolate_enter(Isolate* isolate) {
 
 void v8cxx__isolate_exit(Isolate* isolate) {
   isolate->Exit();
+}
+
+Isolate* v8cxx__isolate_allocate() {
+  return Isolate::Allocate();
+}
+
+void v8cxx__isolate_initialize(Isolate* isolate,
+                               const Isolate::CreateParams& params) {
+  Isolate::Initialize(isolate, params);
+}
+
+bool v8cxx__isolate_is_current(const Isolate* isolate) {
+  return isolate->IsCurrent();
+}
+
+void v8cxx__isolate_clear_kept_objects(Isolate* isolate) {
+  isolate->ClearKeptObjects();
+}
+
+void v8cxx__isolate_set_abort_on_uncaught_exception_callback(
+    Isolate* isolate,
+    Isolate::AbortOnUncaughtExceptionCallback callback) {
+  isolate->SetAbortOnUncaughtExceptionCallback(callback);
+}
+
+void v8cxx__isolate_set_host_import_module_dynamically_callback(
+    Isolate* isolate,
+    HostImportModuleDynamicallyCallback callback) {
+  isolate->SetHostImportModuleDynamicallyCallback(callback);
+}
+
+void v8cxx__isolate_set_host_create_shadow_realm_context_callback(
+    Isolate* isolate,
+    HostCreateShadowRealmContextCallback callback) {
+  isolate->SetHostCreateShadowRealmContextCallback(callback);
+}
+
+void v8cxx__isolate_set_prepare_stack_trace_callback(
+    Isolate* isolate,
+    PrepareStackTraceCallback callback) {
+  isolate->SetPrepareStackTraceCallback(callback);
+}
+
+void v8cxx__isolate_memory_pressure_notification(Isolate* isolate,
+                                                 MemoryPressureLevel level) {
+  isolate->MemoryPressureNotification(level);
+}
+
+void v8cxx__isolate_dispose(Isolate* isolate) {
+  isolate->Dispose();
+}
+
+void v8cxx__isolate_dump_and_reset_stats(Isolate* isolate) {
+  isolate->DumpAndResetStats();
+}
+
+void v8cxx__isolate_discard_thread_specific_metadata(Isolate* isolate) {
+  isolate->DiscardThreadSpecificMetadata();
+}
+
+void v8cxx__isolate_set_data(Isolate* isolate, uint32_t slot, void* data) {
+  isolate->SetData(slot, data);
+}
+
+void* v8cxx__isolate_get_data(Isolate* isolate, uint32_t slot) {
+  return isolate->GetData(slot);
+}
+
+uint32_t v8cxx__isolate_get_number_of_data_slots() {
+  return Isolate::GetNumberOfDataSlots();
+}
+
+void v8cxx__isolate_get_continuation_preserved_embedder_data(
+    Local<Value>* local_buf,
+    Isolate* isolate) {
+  new (local_buf) Local<Value>(isolate->GetContinuationPreservedEmbedderData());
+}
+
+void v8cxx__isolate_set_continuation_preserved_embedder_data(
+    Isolate* isolate,
+    const Local<Value>* data) {
+  isolate->SetContinuationPreservedEmbedderData(*data);
+}
+
+void v8cxx__isolate_set_idle(Isolate* isolate, bool is_idle) {
+  isolate->SetIdle(is_idle);
+}
+
+bool v8cxx__isolate_in_context(Isolate* isolate) {
+  return isolate->InContext();
+}
+
+void v8cxx__isolate_get_entered_or_microtask_context(Local<Context>* local_buf,
+                                                     Isolate* isolate) {
+  new (local_buf) Local<Context>(isolate->GetEnteredOrMicrotaskContext());
+}
+
+void v8cxx__isolate_get_incumbent_context(Local<Context>* local_buf,
+                                          Isolate* isolate) {
+  new (local_buf) Local<Context>(isolate->GetIncumbentContext());
+}
+
+void v8cxx__isolate_get_current_host_defined_options(
+    MaybeLocal<Data>* maybe_local_buf,
+    Isolate* isolate) {
+  new (maybe_local_buf)
+      MaybeLocal<Data>(isolate->GetCurrentHostDefinedOptions());
+}
+
+void v8cxx__isolate_throw_error(Local<Value>* local_buf,
+                                Isolate* isolate,
+                                const Local<String>* message) {
+  new (local_buf) Local<Value>(isolate->ThrowError(*message));
+}
+
+void v8cxx__isolate_throw_exception(Local<Value>* local_buf,
+                                    Isolate* isolate,
+                                    const Local<Value>* exception) {
+  new (local_buf) Local<Value>(isolate->ThrowException(*exception));
+}
+
+void v8cxx__isolate_terminate_execution(Isolate* isolate) {
+  isolate->TerminateExecution();
+}
+
+bool v8cxx__isolate_is_execution_terminating(Isolate* isolate) {
+  return isolate->IsExecutionTerminating();
+}
+
+void v8cxx__isolate_cancel_terminate_execution(Isolate* isolate) {
+  isolate->CancelTerminateExecution();
+}
+
+void v8cxx__isolate_request_interrupt(Isolate* isolate,
+                                      InterruptCallback callback,
+                                      void* data) {
+  isolate->RequestInterrupt(callback, data);
+}
+
+bool v8cxx__isolate_has_pending_background_tasks(Isolate* isolate) {
+  return isolate->HasPendingBackgroundTasks();
+}
+
+void v8cxx__isolate_set_event_logger(Isolate* isolate,
+                                     LogEventCallback callback) {
+  isolate->SetEventLogger(callback);
+}
+
+void v8cxx__isolate_add_before_call_entered_callback(
+    Isolate* isolate,
+    BeforeCallEnteredCallback callback) {
+  isolate->AddBeforeCallEnteredCallback(callback);
+}
+
+void v8cxx__isolate_remove_before_call_entered_callback(
+    Isolate* isolate,
+    BeforeCallEnteredCallback callback) {
+  isolate->RemoveBeforeCallEnteredCallback(callback);
+}
+
+void v8cxx__isolate_add_call_completed_callback(
+    Isolate* isolate,
+    CallCompletedCallback callback) {
+  isolate->AddCallCompletedCallback(callback);
+}
+
+void v8cxx__isolate_remove_call_completed_callback(
+    Isolate* isolate,
+    CallCompletedCallback callback) {
+  isolate->RemoveCallCompletedCallback(callback);
+}
+
+void v8cxx__isolate_set_promise_hook(Isolate* isolate, PromiseHook hook) {
+  isolate->SetPromiseHook(hook);
+}
+
+void v8cxx__isolate_set_promise_reject_callback(
+    Isolate* isolate,
+    PromiseRejectCallback callback) {
+  isolate->SetPromiseRejectCallback(callback);
+}
+
+void v8cxx__isolate_perform_micrtask_checkpoint(Isolate* isolate) {
+  isolate->PerformMicrotaskCheckpoint();
+}
+
+void v8cxx__isolate_enqueue_microtask(Isolate* isolate,
+                                      const Local<Function>* microtask) {
+  isolate->EnqueueMicrotask(*microtask);
+}
+
+void v8cxx__isolate_enqueue_microtask_with_callback(Isolate* isolate,
+                                                    MicrotaskCallback callback,
+                                                    void* data) {
+  isolate->EnqueueMicrotask(callback, data);
+}
+
+void v8cxx__isolate_set_microtasks_policy(Isolate* isolate,
+                                          MicrotasksPolicy policy) {
+  isolate->SetMicrotasksPolicy(policy);
+}
+
+MicrotasksPolicy v8cxx__isolate_get_microtasks_policy(Isolate* isolate) {
+  return isolate->GetMicrotasksPolicy();
+}
+
+void v8cxx__isolate_add_microtasks_completed_callback(
+    Isolate* isolate,
+    MicrotasksCompletedCallbackWithData callback,
+    void* data) {
+  isolate->AddMicrotasksCompletedCallback(callback, data);
+}
+
+void v8cxx__isolate_remove_microtasks_completed_callback(
+    Isolate* isolate,
+    MicrotasksCompletedCallbackWithData callback,
+    void* data) {
+  isolate->RemoveMicrotasksCompletedCallback(callback, data);
+}
+
+void v8cxx__isolate_set_stack_limit(Isolate* isolate, uintptr_t stack_limit) {
+  isolate->SetStackLimit(stack_limit);
+}
+
+void v8cxx__isolate_set_fatal_error_handler(Isolate* isolate,
+                                            FatalErrorCallback callback) {
+  isolate->SetFatalErrorHandler(callback);
+}
+
+void v8cxx__isolate_set_oom_error_handler(Isolate* isolate,
+                                          OOMErrorCallback callback) {
+  isolate->SetOOMErrorHandler(callback);
+}
+
+void v8cxx__isolate_install_conditional_features(
+    Isolate* isolate,
+    const Local<Context>* context) {
+  isolate->InstallConditionalFeatures(*context);
+}
+
+bool v8cxx__isolate_is_dead(Isolate* isolate) {
+  isolate->IsDead();
+}
+
+void v8cxx__isolate_set_capture_stack_trace_for_uncaught_exceptions(
+    Isolate* isolate,
+    bool capture,
+    int frame_limit,
+    StackTrace::StackTraceOptions options) {
+  isolate->SetCaptureStackTraceForUncaughtExceptions(capture, frame_limit,
+                                                     options);
+}
+
+bool v8cxx__isolate_is_in_use(Isolate* isolate) {
+  return isolate->IsInUse();
 }
 }
 
