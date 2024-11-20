@@ -59,6 +59,15 @@ extern "C" {
         this: *mut FunctionTemplate,
         object: *const Local<Value>,
     ) -> bool;
+    fn v8cxx__function_template_set_exception_context(
+        this: *mut FunctionTemplate,
+        context: ExceptionContext,
+    );
+    fn v8cxx__function_template_set_accept_any_receiver(this: *mut FunctionTemplate, accept: bool);
+    fn v8cxx__function_template_is_leaf_template_for_api_object(
+        this: *mut FunctionTemplate,
+        value: *const Local<Value>,
+    );
 }
 
 #[repr(C)]
@@ -175,6 +184,21 @@ impl FunctionTemplate {
     pub fn has_instance(&mut self, object: &Local<Value>) -> bool {
         unsafe { v8cxx__function_template_has_instance(self, object) }
     }
+
+    #[inline(always)]
+    pub fn set_exception_context(&mut self, context: ExceptionContext) {
+        unsafe { v8cxx__function_template_set_exception_context(self, context) };
+    }
+
+    #[inline(always)]
+    pub fn set_accept_any_receiver(&mut self, accept: bool) {
+        unsafe { v8cxx__function_template_set_accept_any_receiver(self, accept) };
+    }
+
+    #[inline(always)]
+    pub fn is_leaf_template_for_api_object(&mut self, value: &Local<Value>) {
+        unsafe { v8cxx__function_template_is_leaf_template_for_api_object(self, value) };
+    }
 }
 
 impl Data for FunctionTemplate {}
@@ -191,4 +215,26 @@ pub enum SideEffectType {
     HasSideEffect,
     HasNoSideEffect,
     HasSideEffectToReceiver,
+}
+
+#[repr(C)]
+pub enum ExceptionContext {
+    Unknown,
+    Constructor,
+    Operation,
+    AttributeGet,
+    AttributeSet,
+    IndexedQuery,
+    IndexedGetter,
+    IndexedDescriptor,
+    IndexedSetter,
+    IndexedDefiner,
+    IndexedDeleter,
+    NamedQuery,
+    NamedGetter,
+    NamedDescriptor,
+    NamedSetter,
+    NamedDefiner,
+    NamedDeleter,
+    NamedEnumerator,
 }
